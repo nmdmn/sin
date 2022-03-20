@@ -1,0 +1,12 @@
+{
+  "name": "sin",
+  "version": "0.0.0",
+  "description": "threejs sandbox",
+  "repository": "asd",
+  "author": "nmd",
+  "license": "MIT",
+  "devDependencies": {
+    "@parcel/transformer-sass": "2.3.2",
+    "parcel": "^2.3.2"
+  }
+}
