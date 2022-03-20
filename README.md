@@ -7,7 +7,13 @@ install
 ```sh
 yarn install
 ```
+
+build
+```sh
+yarn build
+```
+
 run
 ```sh
-yarn parcel src/index.html
+yarn start
 ```
