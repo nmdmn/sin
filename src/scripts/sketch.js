@@ -59,9 +59,6 @@ export default class Sketch {
       mesh.position.set(settings.ui.planePositionX.data,
                         settings.ui.planePositionY.data,
                         settings.ui.planePositionZ.data);
-      // asdasdasd
-      // qweqweqwe
-      // console.log(dT);
     });
 
     app.start();
