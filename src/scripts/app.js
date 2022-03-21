@@ -25,7 +25,12 @@ export default class App {
     for (let uiItemId in uiSettingsPropNames) {
       const uiItemName = uiSettingsPropNames[uiItemId];
       const uiItem = this.settings.ui[uiItemName];
-      this.gui.add(uiItem, uiItemName, uiItem.min, uiItem.max, uiItem.step);
+      if (uiItem.hasOwnProperty("type") && uiItem.type == "color") {
+        this.gui.addColor(uiItem, "data").name(uiItemName);
+      } else {
+        this.gui.add(uiItem, "data", uiItem.min, uiItem.max, uiItem.step)
+            .name(uiItemName);
+      }
     }
 
     this.onResize();
