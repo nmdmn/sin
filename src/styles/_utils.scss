@@ -1,0 +1,14 @@
+@use "sass:math";
+
+@mixin setHeaderFontSizes($from, $to) {
+	$headerCount: 6;
+	$step: math.round(calc(($from - $to) / $headerCount));
+
+	@for $i from 0 to $headerCount {
+		h#{$i+1} {
+			font: {
+				size: $from - $i * $step;
+			}
+		}
+	}
+}

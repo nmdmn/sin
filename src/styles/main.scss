@@ -1,0 +1,22 @@
+@import "nav";
+@import "section";
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	scroll-behavior: smooth;
+}
+
+main {
+	font: {
+		size: $fontSizeP;
+		color: $fgColor;
+	}
+	background: {
+		color: $bgColor;
+	}
+}
+
+@include setHeaderFontSizes($fontSizeH, $fontSizeP);
+
