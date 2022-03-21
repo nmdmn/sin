@@ -14,19 +14,49 @@ export default class Sketch {
         farZ : 1000,
         position : new Vector3(0, 0, 3),
       },
+      ui : {
+        planeColorRed : {
+          planeColorRed : 0,
+          min : 0,
+          max : 255,
+          step : 1,
+        },
+        planeColorGreen : {
+          planeColorGreen : 255,
+          min : 0,
+          max : 255,
+          step : 1,
+        },
+        planeColorBlue : {
+          planeColorBlue : 0,
+          min : 0,
+          max : 255,
+          step : 1,
+        },
+      },
     };
 
     const app = new App(args, settings);
 
     const geometry = new Three.PlaneGeometry(1, 1, 1, 1);
-    const material = new Three.MeshBasicMaterial({color : 0x11ff11});
+    const material = new Three.MeshBasicMaterial({
+      color : new Three.Color(`rgb(${settings.ui.planeColorRed.planeColorRed},${
+          settings.ui.planeColorGreen.planeColorGreen},${
+          settings.ui.planeColorBlue.planeColorBlue})`)
+    });
     const mesh = new Three.Mesh(geometry, material);
     app.scene.add(mesh);
 
     app.setUpdateCallback(dT => {
+      mesh.material = new Three.MeshBasicMaterial({
+        color :
+            new Three.Color(`rgb(${settings.ui.planeColorRed.planeColorRed},${
+                settings.ui.planeColorGreen.planeColorGreen},${
+                settings.ui.planeColorBlue.planeColorBlue})`)
+      });
       // asdasdasd
       // qweqweqwe
-      console.log(dT);
+      // console.log(dT);
     });
 
     app.start();

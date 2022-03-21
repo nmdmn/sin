@@ -21,6 +21,13 @@ export default class App {
 
     this.gui = new Dat.GUI();
 
+    const uiSettingsPropNames = Object.getOwnPropertyNames(this.settings.ui);
+    for (let uiItemId in uiSettingsPropNames) {
+      const uiItemName = uiSettingsPropNames[uiItemId];
+      const uiItem = this.settings.ui[uiItemName];
+      this.gui.add(uiItem, uiItemName, uiItem.min, uiItem.max, uiItem.step);
+    }
+
     this.onResize();
     window.addEventListener('resize', () => { this.onResize(); });
   }
