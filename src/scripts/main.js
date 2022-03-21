@@ -1,15 +1,9 @@
-import App from "./app.js";
+import Sketch from "./sketch.js";
 
 function main() {
-  const app = new App(settings => {
-    // setup
-    settings["clearColor"] = 0x121212;
+  new Sketch({
+    querySelect : "canvas",
   });
-
-  app.start(dT => {
-                // update
-                // console.log(dT);
-            });
 }
 
 document.addEventListener("DOMContentLoaded", main);

@@ -1,54 +1,49 @@
-import * as DAT from "dat.gui";
-import * as THREE from "three";
+import * as Dat from "dat.gui";
+import * as Three from "three";
 
 export default class App {
-  constructor(callback) {
-    this.settings = {
-      camera : {
-        fov : 75,
-        nearZ : 0.1,
-        farZ : 1000,
-      },
-      display : {
-        clearColor : 0x000000,
-        aspectRatio : window.innerWidth / window.innerHeight,
-      },
-      someSetting : 0,
+  constructor(args, settings) {
+    this.canvas = document.querySelector(args.querySelect);
+
+    this.settings = settings;
+    this.settings["display"] = {
+      clearColor : 0xff1111,
+      aspectRatio : this.canvas.offsetWidth / this.canvas.offsetHeight,
     };
-    callback(this.settings);
-    this.gui = new DAT.GUI();
-    this.gui.add(this.settings, "someSetting", 0, 1, 0.1);
-    this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(
+
+    this.scene = new Three.Scene();
+    this.renderer = new Three.WebGL1Renderer({canvas : this.canvas});
+    this.renderer.setClearColor(this.settings.display.clearColor);
+    this.camera = new Three.PerspectiveCamera(
         this.settings.camera.fov / 2, this.settings.display.aspectRatio,
         this.settings.camera.nearZ, this.settings.camera.farZ);
-    this.canvas = document.querySelector("canvas");
-    this.renderer = new THREE.WebGLRenderer({canvas : this.canvas});
-    this.renderer.setClearColor(this.settings.display.clearColor);
-    this.onWindowResize();
-    this.setEventListeners();
+    this.camera.position.copy(this.settings.camera.position);
+
+    this.gui = new Dat.GUI();
+
+    this.onResize();
+    window.addEventListener('resize', () => { this.onResize(); });
   }
 
-  update() {
+  setUpdateCallback(updateCallback) { this.updateCallback = updateCallback; }
+
+  onResize() {
+    this.renderer.setSize(this.canvas.offsetWidth, this.canvas.offsetHeight);
+    this.renderer.setPixelRatio(window.devicePixelRatio);
+
+    this.camera.aspect = this.settings.display.aspectRatio;
+    this.camera.updateProjectionMatrix();
+  }
+
+  tick() {
     this.updateCallback(this.clock.getDelta());
     this.renderer.render(this.scene, this.camera);
-    window.requestAnimationFrame(this.update.bind(this));
+
+    window.requestAnimationFrame(this.tick.bind(this));
   }
 
-  start(callback) {
-    this.clock = new THREE.Clock();
-    this.updateCallback = callback;
-    this.update();
-  }
-
-  setEventListeners() {
-    window.addEventListener('resize', () => { this.onWindowResize(); });
-  }
-
-  onWindowResize() {
-    this.camera.aspect = this.canvas.style.width / this.canvas.style.height;
-    this.camera.updateProjectionMatrix();
-    this.renderer.setSize(this.canvas.style.width, this.canvas.style.height);
-    this.renderer.setPixelRatio(window.devicePixelRatio);
+  start() {
+    this.clock = new Three.Clock();
+    this.tick();
   }
 }
