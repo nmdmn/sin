@@ -4,20 +4,27 @@ import * as THREE from "three";
 export default class App {
   constructor(callback) {
     this.settings = {
-      clearColor : 0x000000,
-      fov : 75,
+      camera : {
+        fov : 75,
+        nearZ : 0.1,
+        farZ : 1000,
+      },
+      display : {
+        clearColor : 0x000000,
+        aspectRatio : window.innerWidth / window.innerHeight,
+      },
       someSetting : 0,
     };
     callback(this.settings);
     this.gui = new DAT.GUI();
     this.gui.add(this.settings, "someSetting", 0, 1, 0.1);
     this.scene = new THREE.Scene();
-    this.aspectRatio = window.innerWidth / window.innerHeight;
-    this.camera = new THREE.PerspectiveCamera(this.settings.fov / 2,
-                                              this.aspectRatio, 0.1, 1000);
+    this.camera = new THREE.PerspectiveCamera(
+        this.settings.camera.fov / 2, this.settings.display.aspectRatio,
+        this.settings.camera.nearZ, this.settings.camera.farZ);
     this.canvas = document.querySelector("canvas");
     this.renderer = new THREE.WebGLRenderer({canvas : this.canvas});
-    this.renderer.setClearColor(this.settings.clearColor);
+    this.renderer.setClearColor(this.settings.display.clearColor);
     this.onWindowResize();
     this.setEventListeners();
   }
