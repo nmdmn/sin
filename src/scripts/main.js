@@ -7,9 +7,9 @@ function main() {
   });
 
   app.start(dT => {
-    // update
-    console.log(dT);
-  });
+                // update
+                // console.log(dT);
+            });
 }
 
-main();
+document.addEventListener("DOMContentLoaded", main);
