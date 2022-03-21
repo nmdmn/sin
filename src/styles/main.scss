@@ -16,7 +16,12 @@ main {
 	background: {
 		color: $bgColor;
 	}
+	canvas: {
+    position: fixed;
+    top: 0;
+    left: 0;
+    outline: none;
+	}
 }
 
 @include setHeaderFontSizes($fontSizeH, $fontSizeP);
-
