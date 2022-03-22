@@ -39,7 +39,6 @@ export default class Sketch {
 
     const app = new App(args, settings);
 
-    const geometry = new Three.PlaneGeometry(1, 1, 1, 1);
     const defaultShader = new Three.ShaderMaterial({
       side : Three.DoubleSide,
       extensions : {
@@ -51,7 +50,8 @@ export default class Sketch {
       vertexShader : VertexShader,
       fragmentShader : FragmentShader,
     });
-    const mesh = new Three.Mesh(geometry, defaultShader);
+    const geometry = new Three.PlaneGeometry(1, 1, 10, 10);
+    const mesh = new Three.Points(geometry, defaultShader);
     mesh.position.set(settings.ui.planePositionX.data,
                       settings.ui.planePositionY.data,
                       settings.ui.planePositionZ.data);
