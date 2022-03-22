@@ -1,6 +1,7 @@
 varying vec2 vUv;
 
 uniform int scroll;
+uniform float time;
 
 void main() {
   vUv = uv;

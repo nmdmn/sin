@@ -45,6 +45,7 @@ export default class Sketch {
         derivates : "#extensions GL_OES_standard_derivates : enable",
       },
       uniforms : {
+        time : app.clock.getElapsedTime(),
         scroll : window.scrollY,
       },
       vertexShader : VertexShader,

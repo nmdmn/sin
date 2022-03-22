@@ -38,6 +38,8 @@ export default class App {
 
     this.onResize();
     window.addEventListener('resize', () => { this.onResize(); });
+
+    this.clock = new Three.Clock();
   }
 
   setUpdateCallback(updateCallback) { this.updateCallback = updateCallback; }
@@ -57,8 +59,5 @@ export default class App {
     window.requestAnimationFrame(this.tick.bind(this));
   }
 
-  start() {
-    this.clock = new Three.Clock();
-    this.tick();
-  }
+  start() { this.tick(); }
 }
