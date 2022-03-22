@@ -45,8 +45,8 @@ export default class Sketch {
           // derivates : "#extensions GL_OES_standard_derivates : enable",
       },
       uniforms : {
-        time : app.clock.getElapsedTime(),
-        scroll : window.scrollY,
+        time : {value : app.clock.getElapsedTime()},
+        scroll : {value : window.scrollY},
       },
       vertexShader : VertexShader,
       fragmentShader : FragmentShader,
@@ -59,8 +59,8 @@ export default class Sketch {
     app.scene.add(mesh);
 
     app.setUpdateCallback(dT => {
-      defaultShader.uniforms["time"] = app.clock.getElapsedTime();
-      defaultShader.uniforms["scroll"] = window.scrollY;
+      defaultShader.uniforms["time"].value = app.clock.getElapsedTime();
+      defaultShader.uniforms["scroll"].value = window.scrollY;
 
       mesh.position.set(settings.ui.planePositionX.data,
                         settings.ui.planePositionY.data,
