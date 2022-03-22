@@ -9,7 +9,7 @@ export default class App {
     this.settings = settings;
     this.settings.display = {
       clearColor : 0x111111,
-      aspectRatio : this.canvas.offsetWidth / this.canvas.offsetHeight,
+      aspectRatio : this.canvas.width / this.canvas.height,
     };
 
     this.scene = new Three.Scene();
@@ -56,6 +56,7 @@ export default class App {
   }
 
   tick() {
+    this.cameraControl.update();
     this.updateCallback(this.clock.getDelta());
     this.renderer.render(this.scene, this.camera);
 
