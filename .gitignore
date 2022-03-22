@@ -1,4 +1,5 @@
 dist
+rel
 node_modules
 yarn.lock
 .parcel-cache
