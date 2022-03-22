@@ -34,28 +34,30 @@ export default class Sketch {
           max : 1.,
           step : .1,
         },
-        planeColor : {
-          type : "color",
-          data : 0x11ff11,
-        },
       },
     };
 
     const app = new App(args, settings);
 
     const geometry = new Three.PlaneGeometry(1, 1, 1, 1);
-    const material = new Three.MeshBasicMaterial(
-        {color : new Three.Color(settings.ui.planeColor.data)});
-    const mesh = new Three.Mesh(geometry, material);
+    const defaultShader = new Three.ShaderMaterial({
+      side : Three.DoubleSide,
+      extensions : {
+        derivates : "#extensions GL_OES_standard_derivates : enable",
+      },
+      uniforms : {
+        scroll : window.scrollY,
+      },
+      vertexShader : VertexShader,
+      fragmentShader : FragmentShader,
+    });
+    const mesh = new Three.Mesh(geometry, defaultShader);
     mesh.position.set(settings.ui.planePositionX.data,
                       settings.ui.planePositionY.data,
                       settings.ui.planePositionZ.data);
     app.scene.add(mesh);
 
     app.setUpdateCallback(dT => {
-      mesh.material = new Three.MeshBasicMaterial(
-          {color : new Three.Color(settings.ui.planeColor.data)});
-
       mesh.position.set(settings.ui.planePositionX.data,
                         settings.ui.planePositionY.data,
                         settings.ui.planePositionZ.data);

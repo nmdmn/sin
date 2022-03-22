@@ -7,13 +7,14 @@ export default class App {
 
     this.settings = settings;
     this.settings["display"] = {
-      clearColor : 0xff1111,
+      clearColor : 0x111111,
       aspectRatio : this.canvas.offsetWidth / this.canvas.offsetHeight,
     };
 
     this.scene = new Three.Scene();
     this.renderer = new Three.WebGL1Renderer({canvas : this.canvas});
     this.renderer.setClearColor(this.settings.display.clearColor);
+    this.renderer.antialias = true;
     this.camera = new Three.PerspectiveCamera(
         this.settings.camera.fov / 2, this.settings.display.aspectRatio,
         this.settings.camera.nearZ, this.settings.camera.farZ);
