@@ -1,5 +1,6 @@
 import * as Dat from "dat.gui";
 import * as Three from "three";
+import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 
 export default class App {
   constructor(args, settings) {
@@ -19,6 +20,7 @@ export default class App {
         this.settings.camera.fov / 2, this.settings.display.aspectRatio,
         this.settings.camera.nearZ, this.settings.camera.farZ);
     this.camera.position.copy(this.settings.camera.position);
+    this.cameraControl = new OrbitControls(this.camera, this.canvas);
 
     this.gui = new Dat.GUI();
 
