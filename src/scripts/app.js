@@ -1,6 +1,9 @@
 import * as Dat from "dat.gui";
 import * as Three from "three";
-import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
+import {
+  FlyControls,
+  OrbitControls
+} from "three/examples/jsm/controls/FlyControls";
 
 export default class App {
   constructor(args, settings) {
@@ -20,7 +23,8 @@ export default class App {
         this.settings.camera.fov / 2, this.settings.display.aspectRatio,
         this.settings.camera.nearZ, this.settings.camera.farZ);
     this.camera.position.copy(this.settings.camera.position);
-    this.cameraControl = new OrbitControls(this.camera, this.canvas);
+    this.cameraControl = new FlyControls(this.camera, this.canvas);
+    this.cameraControl.dragToLook = true;
 
     this.gui = new Dat.GUI();
 
@@ -56,7 +60,7 @@ export default class App {
   }
 
   tick() {
-    this.cameraControl.update();
+    this.cameraControl.update(this.clock.getDelta());
     this.updateCallback(this.clock.getDelta());
     this.renderer.render(this.scene, this.camera);
 
