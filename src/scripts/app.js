@@ -23,6 +23,7 @@ export default class App {
         this.settings.camera.fov / 2, this.settings.display.aspectRatio,
         this.settings.camera.nearZ, this.settings.camera.farZ);
     this.camera.position.copy(this.settings.camera.position);
+    this.camera.rotation.copy(this.settings.camera.rotation);
     this.cameraControl = new FlyControls(this.camera, this.canvas);
     this.cameraControl.dragToLook = true;
 
@@ -30,37 +31,37 @@ export default class App {
       data : this.camera.rotation.x,
       min : .0,
       max : Math.PI / 2,
-      step : .01,
+      step : .001,
     };
     this.settings.ui["camRotY"] = {
       data : this.camera.rotation.y,
       min : .0,
       max : Math.PI / 2,
-      step : .01,
+      step : .001,
     };
     this.settings.ui["camRotZ"] = {
       data : this.camera.rotation.z,
       min : .0,
       max : Math.PI / 2,
-      step : .01,
+      step : .001,
     };
     this.settings.ui["camPosX"] = {
       data : this.camera.position.x,
       min : -10,
       max : 10,
-      step : .1,
+      step : .001,
     };
     this.settings.ui["camPosY"] = {
       data : this.camera.position.y,
       min : -10,
       max : 10,
-      step : .1,
+      step : .001,
     };
     this.settings.ui["camPosZ"] = {
       data : this.camera.position.z,
       min : -10,
       max : 10,
-      step : .1,
+      step : .001,
     };
 
     this.gui = new Dat.GUI();
