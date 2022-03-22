@@ -25,8 +25,14 @@ export default class App {
     this.camera.position.copy(this.settings.camera.position);
     this.camera.rotation.copy(this.settings.camera.rotation);
     this.cameraControl = new FlyControls(this.camera, this.canvas);
-    this.cameraControl.dragToLook = true;
+    this.cameraControl.rollSpeed = .25;
 
+    this.settings.ui["camFov"] = {
+      data : this.camera.fov * 2,
+      min : 1,
+      max : 179,
+      step : 1,
+    };
     this.settings.ui["camRotX"] = {
       data : this.camera.rotation.x,
       min : -Math.PI / 2,
@@ -112,6 +118,7 @@ export default class App {
   }
 
   tick() {
+    this.camera.fov = this.settings.ui.camFov.data / 2;
     this.camera.rotation.set(this.settings.ui.camRotX.data,
                              this.settings.ui.camRotY.data,
                              this.settings.ui.camRotZ.data);
@@ -125,6 +132,7 @@ export default class App {
     this.settings.ui.camPosX.data = this.camera.position.x;
     this.settings.ui.camPosY.data = this.camera.position.y;
     this.settings.ui.camPosZ.data = this.camera.position.z;
+    this.camera.updateProjectionMatrix();
 
     this.updateCallback(this.clock.getDelta());
     this.renderer.render(this.scene, this.camera);

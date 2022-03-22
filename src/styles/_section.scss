@@ -24,6 +24,12 @@ section {
 	}
 
 	table {
+		border: {
+			radius: 15px;
+			width: 0px;
+			style: solid;
+			color: $fgColor;
+		}
 		align-self: flex-start;
 		td {
 			padding: 5px;
