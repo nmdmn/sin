@@ -65,6 +65,7 @@ export default class App {
     };
 
     this.gui = new Dat.GUI();
+    Dat.GUI.toggleHide();
 
     const uiSettingsPropNames = Object.getOwnPropertyNames(this.settings.ui);
     for (let uiItemId in uiSettingsPropNames) {
@@ -81,6 +82,7 @@ export default class App {
 
     this.onResize();
     window.addEventListener('resize', () => { this.onResize(); });
+    window.addEventListener('keydown', event => { this.onKey(event); });
 
     this.clock = new Three.Clock();
   }
@@ -96,6 +98,17 @@ export default class App {
 
     this.camera.aspect = this.settings.display.aspectRatio;
     this.camera.updateProjectionMatrix();
+  }
+
+  onKey(event) {
+    const shortcutTableDom = document.querySelector("#shortcutTableDom");
+    shortcutTableDom.classList.add("started");
+
+    switch (event.key) {
+    case "Escape":
+      Dat.GUI.toggleHide();
+      break;
+    }
   }
 
   tick() {

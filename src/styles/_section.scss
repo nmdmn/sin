@@ -2,5 +2,42 @@
 @import "utils";
 
 section {
-	display: none;
+	//display only the first section
+	&:not(:first-child) {
+		display: none;
+	}
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	height: 100vh;
+
+	h1, h4, table {
+		padding: 3px;
+		background: {
+			color: $bgColor;
+		}
+	}
+
+	h4 {
+		align-self: flex-end;
+	}
+
+	table {
+		align-self: flex-start;
+		td {
+			padding: 5px;
+			text-align: center;
+			border: {
+				radius: 3px;
+				width: 1px;
+				style: solid;
+			}
+		}
+	}
+
+	.started {
+		opacity: 0;
+		transition: opacity 2s ease-in-out;
+	}
 }
