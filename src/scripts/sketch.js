@@ -30,8 +30,8 @@ export default class Sketch {
         },
         planePositionZ : {
           data : .0,
-          min : .0,
-          max : 1.,
+          min : -10.,
+          max : 2.,
           step : .1,
         },
       },
@@ -42,7 +42,7 @@ export default class Sketch {
     const defaultShader = new Three.ShaderMaterial({
       side : Three.DoubleSide,
       extensions : {
-        derivates : "#extensions GL_OES_standard_derivates : enable",
+          // derivates : "#extensions GL_OES_standard_derivates : enable",
       },
       uniforms : {
         time : app.clock.getElapsedTime(),
@@ -59,6 +59,9 @@ export default class Sketch {
     app.scene.add(mesh);
 
     app.setUpdateCallback(dT => {
+      defaultShader.uniforms["time"] = app.clock.getElapsedTime();
+      defaultShader.uniforms["scroll"] = window.scrollY;
+
       mesh.position.set(settings.ui.planePositionX.data,
                         settings.ui.planePositionY.data,
                         settings.ui.planePositionZ.data);
