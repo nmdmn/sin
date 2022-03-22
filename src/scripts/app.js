@@ -26,6 +26,43 @@ export default class App {
     this.cameraControl = new FlyControls(this.camera, this.canvas);
     this.cameraControl.dragToLook = true;
 
+    this.settings.ui["camRotX"] = {
+      data : this.camera.rotation.x,
+      min : .0,
+      max : Math.PI / 2,
+      step : .01,
+    };
+    this.settings.ui["camRotY"] = {
+      data : this.camera.rotation.y,
+      min : .0,
+      max : Math.PI / 2,
+      step : .01,
+    };
+    this.settings.ui["camRotZ"] = {
+      data : this.camera.rotation.z,
+      min : .0,
+      max : Math.PI / 2,
+      step : .01,
+    };
+    this.settings.ui["camPosX"] = {
+      data : this.camera.position.x,
+      min : -10,
+      max : 10,
+      step : .1,
+    };
+    this.settings.ui["camPosY"] = {
+      data : this.camera.position.y,
+      min : -10,
+      max : 10,
+      step : .1,
+    };
+    this.settings.ui["camPosZ"] = {
+      data : this.camera.position.z,
+      min : -10,
+      max : 10,
+      step : .1,
+    };
+
     this.gui = new Dat.GUI();
 
     const uiSettingsPropNames = Object.getOwnPropertyNames(this.settings.ui);
@@ -36,7 +73,8 @@ export default class App {
         this.gui.addColor(uiItem, "data").name(uiItemName);
       } else {
         this.gui.add(uiItem, "data", uiItem.min, uiItem.max, uiItem.step)
-            .name(uiItemName);
+            .name(uiItemName)
+            .listen();
       }
     }
 
@@ -60,7 +98,20 @@ export default class App {
   }
 
   tick() {
+    this.camera.rotation.set(this.settings.ui.camRotX.data,
+                             this.settings.ui.camRotY.data,
+                             this.settings.ui.camRotZ.data);
+    this.camera.position.set(this.settings.ui.camPosX.data,
+                             this.settings.ui.camPosY.data,
+                             this.settings.ui.camPosZ.data);
     this.cameraControl.update(this.clock.getDelta());
+    this.settings.ui.camRotX.data = this.camera.rotation.x;
+    this.settings.ui.camRotY.data = this.camera.rotation.y;
+    this.settings.ui.camRotZ.data = this.camera.rotation.z;
+    this.settings.ui.camPosX.data = this.camera.position.x;
+    this.settings.ui.camPosY.data = this.camera.position.y;
+    this.settings.ui.camPosZ.data = this.camera.position.z;
+
     this.updateCallback(this.clock.getDelta());
     this.renderer.render(this.scene, this.camera);
 

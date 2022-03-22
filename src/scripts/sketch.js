@@ -10,31 +10,12 @@ export default class Sketch {
   constructor(args) {
     const settings = {
       camera : {
-        fov : 75,
+        fov : 75.,
         nearZ : .1,
-        farZ : 1000,
+        farZ : 1000.,
         position : new Vector3(0, 0, 3),
       },
-      ui : {
-        planePositionX : {
-          data : .0,
-          min : .0,
-          max : 1.,
-          step : .1,
-        },
-        planePositionY : {
-          data : .0,
-          min : .0,
-          max : 1.,
-          step : .1,
-        },
-        planePositionZ : {
-          data : .0,
-          min : -10.,
-          max : 2.,
-          step : .1,
-        },
-      },
+      ui : {},
     };
 
     const app = new App(args, settings);
@@ -53,18 +34,11 @@ export default class Sketch {
     });
     const geometry = new Three.PlaneGeometry(5, 5, 50, 50);
     const mesh = new Three.Points(geometry, defaultShader);
-    mesh.position.set(settings.ui.planePositionX.data,
-                      settings.ui.planePositionY.data,
-                      settings.ui.planePositionZ.data);
     app.scene.add(mesh);
 
     app.setUpdateCallback(dT => {
       defaultShader.uniforms["time"].value = app.clock.getElapsedTime();
       defaultShader.uniforms["scroll"].value = window.scrollY;
-
-      mesh.position.set(settings.ui.planePositionX.data,
-                        settings.ui.planePositionY.data,
-                        settings.ui.planePositionZ.data);
     });
 
     app.start();
