@@ -7,7 +7,7 @@ export default class App {
     this.canvas = document.querySelector(args.querySelect);
 
     this.settings = settings;
-    this.settings["display"] = {
+    this.settings.display = {
       clearColor : 0x111111,
       aspectRatio : this.canvas.offsetWidth / this.canvas.offsetHeight,
     };
@@ -45,7 +45,10 @@ export default class App {
   setUpdateCallback(updateCallback) { this.updateCallback = updateCallback; }
 
   onResize() {
-    this.renderer.setSize(this.canvas.offsetWidth, this.canvas.offsetHeight);
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+    this.settings.display.aspectRatio = this.canvas.width / this.canvas.height;
+    this.renderer.setSize(this.canvas.width, this.canvas.height);
     this.renderer.setPixelRatio(window.devicePixelRatio);
 
     this.camera.aspect = this.settings.display.aspectRatio;
