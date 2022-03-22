@@ -29,19 +29,19 @@ export default class App {
 
     this.settings.ui["camRotX"] = {
       data : this.camera.rotation.x,
-      min : .0,
+      min : -Math.PI / 2,
       max : Math.PI / 2,
       step : .001,
     };
     this.settings.ui["camRotY"] = {
       data : this.camera.rotation.y,
-      min : .0,
+      min : -Math.PI / 2,
       max : Math.PI / 2,
       step : .001,
     };
     this.settings.ui["camRotZ"] = {
       data : this.camera.rotation.z,
-      min : .0,
+      min : -Math.PI / 2,
       max : Math.PI / 2,
       step : .001,
     };

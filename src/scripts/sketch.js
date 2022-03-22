@@ -13,7 +13,7 @@ export default class Sketch {
         fov : 75.,
         nearZ : .1,
         farZ : 1000.,
-        position : new Vector3(0.744, -1.009, 3.122),
+        position : new Vector3(-1.176, -2.289, 7.145),
         rotation : new Euler(0.32, 0.116, 0.173),
       },
       ui : {},
