@@ -12,7 +12,6 @@ export default class App {
     this.settings = settings;
     this.settings.display = {
       clearColor : 0x111111,
-      aspectRatio : this.canvas.width / this.canvas.height,
     };
 
     this.scene = new Three.Scene();
@@ -20,12 +19,12 @@ export default class App {
     this.renderer.setClearColor(this.settings.display.clearColor);
     this.renderer.antialias = true;
     this.camera = new Three.PerspectiveCamera(
-        this.settings.camera.fov / 2, this.settings.display.aspectRatio,
+        this.settings.camera.fov / 2, window.innerWidth / window.innerHeight,
         this.settings.camera.nearZ, this.settings.camera.farZ);
     this.camera.position.copy(this.settings.camera.position);
     this.camera.rotation.copy(this.settings.camera.rotation);
-    this.cameraControl = new FlyControls(this.camera, this.canvas);
-    this.cameraControl.rollSpeed = .25;
+    // this.cameraControl = new FlyControls(this.camera, this.canvas);
+    // this.cameraControl.rollSpeed = .25;
 
     this.settings.ui["camFov"] = {
       data : this.camera.fov * 2,
@@ -87,7 +86,7 @@ export default class App {
     }
 
     this.onResize();
-    window.addEventListener('resize', () => { this.onResize(); });
+    window.addEventListener('resize', () => { this.onResize(); }, false);
     window.addEventListener('keydown', event => { this.onKey(event); });
 
     this.clock = new Three.Clock();
@@ -96,14 +95,11 @@ export default class App {
   setUpdateCallback(updateCallback) { this.updateCallback = updateCallback; }
 
   onResize() {
-    this.canvas.width = window.innerWidth;
-    this.canvas.height = window.innerHeight;
-    this.settings.display.aspectRatio = this.canvas.width / this.canvas.height;
-    this.renderer.setSize(this.canvas.width, this.canvas.height);
-    this.renderer.setPixelRatio(window.devicePixelRatio);
-
-    this.camera.aspect = this.settings.display.aspectRatio;
+    this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+
+    console.log([ window.innerWidth, window.innerHeight, this.camera.aspect ]);
   }
 
   onKey(event) {
@@ -125,7 +121,7 @@ export default class App {
     this.camera.position.set(this.settings.ui.camPosX.data,
                              this.settings.ui.camPosY.data,
                              this.settings.ui.camPosZ.data);
-    this.cameraControl.update(this.clock.getDelta());
+    // this.cameraControl.update(this.clock.getDelta());
     this.settings.ui.camRotX.data = this.camera.rotation.x;
     this.settings.ui.camRotY.data = this.camera.rotation.y;
     this.settings.ui.camRotZ.data = this.camera.rotation.z;

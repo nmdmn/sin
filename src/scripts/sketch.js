@@ -23,18 +23,25 @@ export default class Sketch {
 
     const defaultShader = new Three.ShaderMaterial({
       side : Three.DoubleSide,
+      clipping : true,
+      fog : true,
+      wireframe : true,
       extensions : {
-          // derivates : "#extensions GL_OES_standard_derivates : enable",
+        // derivates : "#extensions GL_OES_standard_derivates : enable",
+        derivatives : false,     // set to use derivatives
+        fragDepth : false,       // set to use fragment depth values
+        drawBuffers : false,     // set to use draw buffers
+        shaderTextureLOD : false // set to use shader texture LOD
       },
       uniforms : {
-        time : {value : app.clock.getElapsedTime()},
-        scroll : {value : window.scrollY},
+        time : {type : "f", value : app.clock.getElapsedTime()},
+        scroll : {type : "f", value : window.scrollY},
       },
       vertexShader : VertexShader,
       fragmentShader : FragmentShader,
     });
     const geometry = new Three.PlaneGeometry(5, 5, 50, 50);
-    const mesh = new Three.Points(geometry, defaultShader);
+    const mesh = new Three.Mesh(geometry, defaultShader);
     app.scene.add(mesh);
 
     app.setUpdateCallback(dT => {
