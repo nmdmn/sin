@@ -40,7 +40,7 @@ export default class Sketch {
       fragmentShader : FragmentShader,
     });
     const geometry = new Three.PlaneGeometry(5, 5, 50, 50);
-    const mesh = new Three.Mesh(geometry, defaultShader);
+    const mesh = new Three.Points(geometry, defaultShader);
     app.scene.add(mesh);
 
     app.setUpdateCallback(dT => {

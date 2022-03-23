@@ -23,8 +23,8 @@ export default class App {
         this.settings.camera.nearZ, this.settings.camera.farZ);
     this.camera.position.copy(this.settings.camera.position);
     this.camera.rotation.copy(this.settings.camera.rotation);
-    // this.cameraControl = new FlyControls(this.camera, this.canvas);
-    // this.cameraControl.rollSpeed = .25;
+    this.cameraControl = new FlyControls(this.camera, this.canvas);
+    this.cameraControl.rollSpeed = .25;
 
     this.settings.ui["camFov"] = {
       data : this.camera.fov * 2,
@@ -119,7 +119,7 @@ export default class App {
     this.camera.position.set(this.settings.ui.camPosX.data,
                              this.settings.ui.camPosY.data,
                              this.settings.ui.camPosZ.data);
-    // this.cameraControl.update(this.clock.getDelta());
+    this.cameraControl.update(this.clock.getDelta());
     this.settings.ui.camRotX.data = this.camera.rotation.x;
     this.settings.ui.camRotY.data = this.camera.rotation.y;
     this.settings.ui.camRotZ.data = this.camera.rotation.z;
