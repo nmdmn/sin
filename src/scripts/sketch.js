@@ -15,7 +15,14 @@ export default class Sketch {
         rotation : new Euler(.0, .0, .0),
         position : new Vector3(.0, .0, 3),
       },
-      ui : {},
+      ui : {
+        alpha : {
+          value : 1.,
+          min : .0,
+          max : 1.,
+          step : .1,
+        }
+      },
     };
 
     const app = new App(args, settings);
@@ -28,12 +35,13 @@ export default class Sketch {
       extensions : {
         derivates : "#extensions GL_OES_standard_derivates : enable",
         fragDepth : true,
-        drawBuffers : true,
-        shaderTextureLOD : true,
+        drawBuffers : false,
+        shaderTextureLOD : false,
       },
       uniforms : {
         time : {type : "f", value : app.clock.getElapsedTime()},
         scroll : {type : "f", value : window.scrollY},
+        alpha : {type : "f", value : settings.ui.alpha.value},
       },
       vertexShader : VertexShader,
       fragmentShader : FragmentShader,
@@ -45,6 +53,7 @@ export default class Sketch {
     app.setUpdateCallback(dT => {
       defaultShader.uniforms["time"].value = app.clock.getElapsedTime();
       defaultShader.uniforms["scroll"].value = window.scrollY;
+      defaultShader.uniforms["alpha"].value = settings.ui.alpha.value;
     });
 
     app.start();

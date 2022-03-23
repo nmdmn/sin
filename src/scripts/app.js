@@ -12,9 +12,12 @@ export default class App {
     };
 
     this.scene = new Three.Scene();
-    this.renderer = new Three.WebGL1Renderer({canvas : this.canvas});
-    this.renderer.setClearColor(this.settings.display.clearColor);
-    this.renderer.antialias = true;
+    this.renderer = new Three.WebGL1Renderer({
+      canvas : this.canvas,
+      antialias : true,
+      alpha : true,
+    });
+    this.renderer.setClearColor(this.settings.display.clearColor, 0);
     this.camera = new Three.PerspectiveCamera(
         this.settings.camera.fov / 2, window.innerWidth / window.innerHeight,
         this.settings.camera.nearZ, this.settings.camera.farZ);
@@ -23,18 +26,21 @@ export default class App {
     this.cameraControl = new OrbitControls(this.camera, this.canvas);
 
     this.gui = new Dat.GUI();
-    Dat.GUI.toggleHide();
 
     const uiSettingsPropNames = Object.getOwnPropertyNames(this.settings.ui);
     for (let uiItemId in uiSettingsPropNames) {
       const uiItemName = uiSettingsPropNames[uiItemId];
       const uiItem = this.settings.ui[uiItemName];
       if (uiItem.hasOwnProperty("type") && uiItem.type == "color") {
-        this.gui.addColor(uiItem, "data").name(uiItemName);
-      } else {
-        this.gui.add(uiItem, "data", uiItem.min, uiItem.max, uiItem.step)
+        this.gui.addColor(uiItem, "value").name(uiItemName);
+      }
+      if (uiItem.hasOwnProperty("listen") && uiItem.listen) {
+        this.gui.add(uiItem, "value", uiItem.min, uiItem.max, uiItem.step)
             .name(uiItemName)
             .listen();
+      } else {
+        this.gui.add(uiItem, "value", uiItem.min, uiItem.max, uiItem.step)
+            .name(uiItemName)
       }
     }
 
@@ -54,9 +60,6 @@ export default class App {
   }
 
   onKey(event) {
-    const shortcutTableDom = document.querySelector("#shortcutTableDom");
-    shortcutTableDom.classList.add("hide");
-
     switch (event.key) {
     case "Escape":
       Dat.GUI.toggleHide();
