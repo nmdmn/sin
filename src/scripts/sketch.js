@@ -4,7 +4,6 @@ import {Euler, Vector3} from "three";
 import App from "./app.js";
 import FragmentShader from "./shaders/fDefault.glsl";
 import VertexShader from "./shaders/vDefault.glsl";
-import * as Utils from "./utils.js";
 
 export default class Sketch {
   constructor(args) {
@@ -13,8 +12,8 @@ export default class Sketch {
         fov : 75.,
         nearZ : .1,
         farZ : 1000.,
-        rotation : new Euler(0.32, 0.116, 0.173),
-        position : new Vector3(-1.176, -2.289, 7.145),
+        rotation : new Euler(.0, .0, .0),
+        position : new Vector3(.0, .0, 3),
       },
       ui : {},
     };
@@ -39,7 +38,7 @@ export default class Sketch {
       vertexShader : VertexShader,
       fragmentShader : FragmentShader,
     });
-    const geometry = new Three.PlaneGeometry(5, 5, 50, 50);
+    const geometry = new Three.PlaneGeometry(1, 1, 10, 10);
     const mesh = new Three.Mesh(geometry, defaultShader);
     app.scene.add(mesh);
 

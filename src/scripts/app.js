@@ -1,9 +1,6 @@
 import * as Dat from "dat.gui";
 import * as Three from "three";
-import {
-  FlyControls,
-  OrbitControls
-} from "three/examples/jsm/controls/FlyControls";
+import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 
 export default class App {
   constructor(args, settings) {
@@ -11,7 +8,7 @@ export default class App {
 
     this.settings = settings;
     this.settings.display = {
-      clearColor : 0x111111,
+      clearColor : 0x000000,
     };
 
     this.scene = new Three.Scene();
@@ -23,51 +20,7 @@ export default class App {
         this.settings.camera.nearZ, this.settings.camera.farZ);
     this.camera.position.copy(this.settings.camera.position);
     this.camera.rotation.copy(this.settings.camera.rotation);
-    // this.cameraControl = new FlyControls(this.camera, this.canvas);
-    // this.cameraControl.rollSpeed = .25;
-
-    this.settings.ui["camFov"] = {
-      data : this.camera.fov * 2,
-      min : 1,
-      max : 179,
-      step : 1,
-    };
-    this.settings.ui["camRotX"] = {
-      data : this.camera.rotation.x,
-      min : -Math.PI / 2,
-      max : Math.PI / 2,
-      step : .001,
-    };
-    this.settings.ui["camRotY"] = {
-      data : this.camera.rotation.y,
-      min : -Math.PI / 2,
-      max : Math.PI / 2,
-      step : .001,
-    };
-    this.settings.ui["camRotZ"] = {
-      data : this.camera.rotation.z,
-      min : -Math.PI / 2,
-      max : Math.PI / 2,
-      step : .001,
-    };
-    this.settings.ui["camPosX"] = {
-      data : this.camera.position.x,
-      min : -10,
-      max : 10,
-      step : .001,
-    };
-    this.settings.ui["camPosY"] = {
-      data : this.camera.position.y,
-      min : -10,
-      max : 10,
-      step : .001,
-    };
-    this.settings.ui["camPosZ"] = {
-      data : this.camera.position.z,
-      min : -10,
-      max : 10,
-      step : .001,
-    };
+    this.cameraControl = new OrbitControls(this.camera, this.canvas);
 
     this.gui = new Dat.GUI();
     Dat.GUI.toggleHide();
@@ -112,22 +65,6 @@ export default class App {
   }
 
   tick() {
-    this.camera.fov = this.settings.ui.camFov.data / 2;
-    this.camera.rotation.set(this.settings.ui.camRotX.data,
-                             this.settings.ui.camRotY.data,
-                             this.settings.ui.camRotZ.data);
-    this.camera.position.set(this.settings.ui.camPosX.data,
-                             this.settings.ui.camPosY.data,
-                             this.settings.ui.camPosZ.data);
-    // this.cameraControl.update(this.clock.getDelta());
-    this.settings.ui.camRotX.data = this.camera.rotation.x;
-    this.settings.ui.camRotY.data = this.camera.rotation.y;
-    this.settings.ui.camRotZ.data = this.camera.rotation.z;
-    this.settings.ui.camPosX.data = this.camera.position.x;
-    this.settings.ui.camPosY.data = this.camera.position.y;
-    this.settings.ui.camPosZ.data = this.camera.position.z;
-    this.camera.updateProjectionMatrix();
-
     this.updateCallback(this.clock.getDelta());
     this.renderer.render(this.scene, this.camera);
 
