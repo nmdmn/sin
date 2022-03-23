@@ -104,7 +104,7 @@ export default class App {
 
   onKey(event) {
     const shortcutTableDom = document.querySelector("#shortcutTableDom");
-    shortcutTableDom.classList.add("started");
+    shortcutTableDom.classList.add("hide");
 
     switch (event.key) {
     case "Escape":

@@ -28,10 +28,10 @@ export default class Sketch {
       wireframe : true,
       extensions : {
         // derivates : "#extensions GL_OES_standard_derivates : enable",
-        derivatives : false,     // set to use derivatives
-        fragDepth : false,       // set to use fragment depth values
-        drawBuffers : false,     // set to use draw buffers
-        shaderTextureLOD : false // set to use shader texture LOD
+        derivatives : false,    // set to use derivatives
+        fragDepth : true,       // set to use fragment depth values
+        drawBuffers : true,     // set to use draw buffers
+        shaderTextureLOD : true // set to use shader texture LOD
       },
       uniforms : {
         time : {type : "f", value : app.clock.getElapsedTime()},
