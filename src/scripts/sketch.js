@@ -33,6 +33,10 @@ export default class Sketch {
       clipping : true,
       fog : true,
       wireframe : true,
+      transparent : true,
+      depthTest : false,
+      depthWrite : false,
+      blending : Three.AdditiveBlending,
       extensions : {
         derivates : "#extensions GL_OES_standard_derivates : enable",
         fragDepth : true,
