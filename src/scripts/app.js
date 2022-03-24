@@ -15,9 +15,9 @@ export default class App {
     this.renderer = new Three.WebGL1Renderer({
       canvas : this.canvas,
       antialias : true,
-      alpha : true,
+      alpha : false,
     });
-    this.renderer.setClearColor(this.settings.display.clearColor, 0);
+    this.renderer.setClearColor(this.settings.display.clearColor);
     this.camera = new Three.PerspectiveCamera(
         this.settings.camera.fov / 2, window.innerWidth / window.innerHeight,
         this.settings.camera.nearZ, this.settings.camera.farZ);
