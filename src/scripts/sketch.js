@@ -16,6 +16,13 @@ export default class Sketch {
         rotation : new Euler(0.32, 0.116, 0.173),
         position : new Vector3(-1.176, -2.289, 7.145),
       },
+      camera2 : {
+        fov : 53.,
+        nearZ : .1,
+        farZ : 1000.,
+        rotation : new Euler(1.116, 0.24, 0.039),
+        position : new Vector3(0.221, -4.892, 2.039),
+      },
       ui : {},
     };
 
@@ -40,6 +47,13 @@ export default class Sketch {
       fragmentShader : FragmentShader,
     });
     const geometry = new Three.PlaneGeometry(5, 5, 50, 50);
+    const numVertices = geometry.attributes.position.array.length / 3;
+    const randomPerVertex = new Float32Array(numVertices);
+    for (let i = 0; i < randomPerVertex.length; i++) {
+      randomPerVertex.set([ Math.random() ], i);
+    }
+    geometry.setAttribute("random",
+                          new Three.BufferAttribute(randomPerVertex, 1));
     const mesh = new Three.Points(geometry, defaultShader);
     app.scene.add(mesh);
 
