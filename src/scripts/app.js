@@ -19,10 +19,10 @@ export default class App {
     this.renderer.setClearColor(this.settings.display.clearColor);
     this.renderer.antialias = true;
     this.camera = new Three.PerspectiveCamera(
-        this.settings.camera2.fov / 2, window.innerWidth / window.innerHeight,
+        this.settings.camera.fov / 2, window.innerWidth / window.innerHeight,
         this.settings.camera.nearZ, this.settings.camera.farZ);
-    this.camera.position.copy(this.settings.camera2.position);
-    this.camera.rotation.copy(this.settings.camera2.rotation);
+    this.camera.position.copy(this.settings.camera.position);
+    this.camera.rotation.copy(this.settings.camera.rotation);
     this.cameraControl = new FlyControls(this.camera, this.canvas);
     this.cameraControl.rollSpeed = .25;
 
