@@ -25,6 +25,16 @@ export default class App {
     this.camera.rotation.copy(this.settings.camera.rotation);
     this.cameraControl = new OrbitControls(this.camera, this.canvas);
 
+    this.setupUi();
+
+    this.onResize();
+    window.addEventListener('resize', () => { this.onResize(); }, false);
+    window.addEventListener('keydown', event => { this.onKey(event); });
+
+    this.clock = new Three.Clock();
+  }
+
+  setupUi() {
     this.gui = new Dat.GUI();
 
     const uiSettingsPropNames = Object.getOwnPropertyNames(this.settings.ui);
@@ -43,12 +53,6 @@ export default class App {
             .name(uiItemName)
       }
     }
-
-    this.onResize();
-    window.addEventListener('resize', () => { this.onResize(); }, false);
-    window.addEventListener('keydown', event => { this.onKey(event); });
-
-    this.clock = new Three.Clock();
   }
 
   setUpdateCallback(updateCallback) { this.updateCallback = updateCallback; }
