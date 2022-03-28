@@ -52,7 +52,7 @@ export default class App {
       step : 0.01,
     };
     this.settings.ui["bloomStrength"] = {
-      data : .19,
+      data : .29,
       min : 0,
       max : 3,
       step : 0.01,

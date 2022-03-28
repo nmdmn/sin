@@ -28,7 +28,7 @@ export default class Sketch {
         fov : 68.,
         nearZ : .1,
         farZ : 1000.,
-        rotation : new Euler(0., 0., 0.),
+        rotation : new Euler(0., 0., .39),
         position : new Vector3(-.85, 0., 7.),
       },
       ui : {},
