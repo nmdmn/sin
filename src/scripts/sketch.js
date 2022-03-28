@@ -1,3 +1,4 @@
+import PerlinNoise from "perlin-noise-3d"
 import * as Three from "three";
 import {Euler, Vector3} from "three";
 
@@ -36,7 +37,7 @@ export default class Sketch {
       transparent : true,
       depthTest : false,
       depthWrite : false,
-      blending : Three.AdditiveBlending,
+      // blending : Three.AdditiveBlending,
       extensions : {
         derivates : "#extensions GL_OES_standard_derivates : enable",
         fragDepth : true,
@@ -51,13 +52,22 @@ export default class Sketch {
       fragmentShader : FragmentShader,
     });
     const geometry = new Three.PlaneGeometry(5, 5, 50, 50);
-    const numVertices = geometry.attributes.position.array.length / 3;
-    const randomPerVertex = new Float32Array(numVertices);
-    for (let i = 0; i < randomPerVertex.length; i++) {
-      randomPerVertex.set([ Math.random() ], i);
+    // XXX clearup this shit, ugly
+    const posArrayLen = geometry.attributes.position.array.length;
+    const numVertices = posArrayLen / 3;
+    const noisePerVertex = new Float32Array(numVertices);
+    const noise = new PerlinNoise();
+    for (let i = 0; i < posArrayLen; i += 3) {
+      const offset = 1;
+      const noiseVal =
+          noise.get(geometry.attributes.position.array[i] * offset,
+                    geometry.attributes.position.array[i + 1] * offset,
+                    geometry.attributes.position.array[i + 2] * offset);
+      noisePerVertex.set([ noiseVal ], i / 3);
     }
-    geometry.setAttribute("random",
-                          new Three.BufferAttribute(randomPerVertex, 1));
+
+    geometry.setAttribute("noise",
+                          new Three.BufferAttribute(noisePerVertex, 1));
     const mesh = new Three.Points(geometry, defaultShader);
     app.scene.add(mesh);
 
