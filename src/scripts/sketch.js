@@ -57,6 +57,7 @@ export default class Sketch {
     const numVertices = posArrayLen / 3;
     const noisePerVertex = new Float32Array(numVertices);
     const noise = new PerlinNoise();
+    noise.perlin_octaves = 8;
     for (let i = 0; i < posArrayLen; i += 3) {
       const offset = 1;
       const noiseVal =
