@@ -2,8 +2,14 @@ import * as Dat from "dat.gui";
 import * as Three from "three";
 import {
   FlyControls,
-  OrbitControls
 } from "three/examples/jsm/controls/FlyControls";
+import {
+  EffectComposer
+} from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import {RenderPass} from 'three/examples/jsm/postprocessing/RenderPass.js';
+import {
+  UnrealBloomPass
+} from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 
 export default class App {
   constructor(args, settings) {
@@ -18,6 +24,7 @@ export default class App {
     this.renderer = new Three.WebGL1Renderer({canvas : this.canvas});
     this.renderer.setClearColor(this.settings.display.clearColor);
     this.renderer.antialias = true;
+    this.renderer.toneMapping = Three.ReinhardToneMapping;
     this.camera = new Three.PerspectiveCamera(
         this.settings.camera.fov / 2, window.innerWidth / window.innerHeight,
         this.settings.camera.nearZ, this.settings.camera.farZ);
@@ -25,6 +32,34 @@ export default class App {
     this.camera.rotation.copy(this.settings.camera.rotation);
     this.cameraControl = new FlyControls(this.camera, this.canvas);
     this.cameraControl.rollSpeed = .25;
+
+    this.scenePass = new RenderPass(this.scene, this.camera);
+
+    this.bloomPass = new UnrealBloomPass(
+        new Three.Vector2(window.innerWidth, window.innerHeight), .0, .0, .0);
+
+    this.composer = new EffectComposer(this.renderer);
+    this.composer.addPass(this.scenePass);
+    // this.composer.addPass(this.bloomPass);
+
+    this.settings.ui["bloomRadius"] = {
+      data : .0,
+      min : 0,
+      max : 1,
+      step : 0.01,
+    };
+    this.settings.ui["bloomStrength"] = {
+      data : 1.5,
+      min : 0,
+      max : 3,
+      step : 0.01,
+    };
+    this.settings.ui["bloomThreshold"] = {
+      data : .0,
+      min : 0,
+      max : 1,
+      step : 0.01,
+    };
 
     this.settings.ui["camFov"] = {
       data : this.camera.fov * 2,
@@ -128,8 +163,12 @@ export default class App {
     this.settings.ui.camPosZ.data = this.camera.position.z;
     this.camera.updateProjectionMatrix();
 
+    this.bloomPass.threshold = this.settings.ui.bloomThreshold.data;
+    this.bloomPass.strength = this.settings.ui.bloomStrength.data;
+    this.bloomPass.radius = this.settings.ui.bloomRadius.data;
+
     this.updateCallback(this.clock.getDelta());
-    this.renderer.render(this.scene, this.camera);
+    this.composer.render();
 
     window.requestAnimationFrame(this.tick.bind(this));
   }
