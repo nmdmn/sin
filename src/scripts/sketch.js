@@ -1,4 +1,4 @@
-import PerlinNoise from "perlin-noise-3d"
+import perlinNoise3d from "perlin-noise-3d";
 import * as Three from "three";
 import {Euler, Vector3} from "three";
 
@@ -29,7 +29,7 @@ export default class Sketch {
         nearZ : .1,
         farZ : 1000.,
         rotation : new Euler(0., 0., 0.),
-        position : new Vector3(-.5, 0., 5.6),
+        position : new Vector3(-.85, 0., 7.),
       },
       ui : {},
     };
@@ -44,7 +44,7 @@ export default class Sketch {
       transparent : true,
       depthTest : false,
       depthWrite : false,
-      // blending : Three.AdditiveBlending,
+      blending : Three.AdditiveBlending,
       extensions : {
         derivates : "#extensions GL_OES_standard_derivates : enable",
         fragDepth : true,
@@ -63,7 +63,7 @@ export default class Sketch {
     const posArrayLen = geometry.attributes.position.array.length;
     const numVertices = posArrayLen / 3;
     const noisePerVertex = new Float32Array(numVertices);
-    const noise = new PerlinNoise();
+    const noise = new perlinNoise3d();
     noise.perlin_octaves = 8;
     for (let i = 0; i < posArrayLen; i += 3) {
       const offset = 1;

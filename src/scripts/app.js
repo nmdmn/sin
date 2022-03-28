@@ -25,7 +25,9 @@ export default class App {
     this.renderer = new Three.WebGL1Renderer({canvas : this.canvas});
     this.renderer.setClearColor(this.settings.display.clearColor);
     // this.renderer.antialias = true;
-    // this.renderer.toneMapping = Three.ReinhardToneMapping;
+    this.renderer.toneMapping = Three.ReinhardToneMapping;
+    this.renderer.stencil = false;
+    this.renderer.depth = false;
     this.camera = new Three.PerspectiveCamera(
         this.settings.camera3.fov / 2, this.settings.display.aspect,
         this.settings.camera3.nearZ, this.settings.camera3.farZ);
@@ -41,22 +43,22 @@ export default class App {
 
     this.composer = new EffectComposer(this.renderer);
     this.composer.addPass(this.scenePass);
-    // this.composer.addPass(this.bloomPass);
+    this.composer.addPass(this.bloomPass);
 
     this.settings.ui["bloomRadius"] = {
-      data : .0,
+      data : .33,
       min : 0,
       max : 1,
       step : 0.01,
     };
     this.settings.ui["bloomStrength"] = {
-      data : 1.5,
+      data : .19,
       min : 0,
       max : 3,
       step : 0.01,
     };
     this.settings.ui["bloomThreshold"] = {
-      data : .0,
+      data : .23,
       min : 0,
       max : 1,
       step : 0.01,
@@ -135,6 +137,7 @@ export default class App {
         window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.composer.setSize(window.innerWidth, window.innerHeight);
   }
 
   onKey(event) {
