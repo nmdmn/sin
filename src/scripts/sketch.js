@@ -24,6 +24,13 @@ export default class Sketch {
         rotation : new Euler(1.116, 0.24, 0.039),
         position : new Vector3(0.221, -4.892, 2.039),
       },
+      camera3 : {
+        fov : 68.,
+        nearZ : .1,
+        farZ : 1000.,
+        rotation : new Euler(0., 0., 0.),
+        position : new Vector3(-.5, 0., 5.6),
+      },
       ui : {},
     };
 
@@ -51,7 +58,7 @@ export default class Sketch {
       vertexShader : VertexShader,
       fragmentShader : FragmentShader,
     });
-    const geometry = new Three.PlaneGeometry(5, 5, 50, 50);
+    const geometry = new Three.PlaneGeometry(7, 7, 140, 140);
     // XXX clearup this shit, ugly
     const posArrayLen = geometry.attributes.position.array.length;
     const numVertices = posArrayLen / 3;

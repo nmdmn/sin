@@ -18,18 +18,19 @@ export default class App {
     this.settings = settings;
     this.settings.display = {
       clearColor : 0x111111,
+      aspect : window.innerHeight / window.innerHeight,
     };
 
     this.scene = new Three.Scene();
     this.renderer = new Three.WebGL1Renderer({canvas : this.canvas});
     this.renderer.setClearColor(this.settings.display.clearColor);
     // this.renderer.antialias = true;
-    this.renderer.toneMapping = Three.ReinhardToneMapping;
+    // this.renderer.toneMapping = Three.ReinhardToneMapping;
     this.camera = new Three.PerspectiveCamera(
-        this.settings.camera.fov / 2, window.innerWidth / window.innerHeight,
-        this.settings.camera.nearZ, this.settings.camera.farZ);
-    this.camera.position.copy(this.settings.camera.position);
-    this.camera.rotation.copy(this.settings.camera.rotation);
+        this.settings.camera3.fov / 2, this.settings.display.aspect,
+        this.settings.camera3.nearZ, this.settings.camera3.farZ);
+    this.camera.position.copy(this.settings.camera3.position);
+    this.camera.rotation.copy(this.settings.camera3.rotation);
     this.cameraControl = new FlyControls(this.camera, this.canvas);
     this.cameraControl.rollSpeed = .25;
 
@@ -130,7 +131,8 @@ export default class App {
   setUpdateCallback(updateCallback) { this.updateCallback = updateCallback; }
 
   onResize() {
-    this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.aspect = this.settings.display.aspect =
+        window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(window.innerWidth, window.innerHeight);
   }

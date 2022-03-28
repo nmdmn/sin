@@ -2,6 +2,7 @@ attribute float noise;
 
 varying vec2 vUv;
 varying float vNoise;
+varying vec3 vPos;
 
 uniform float time;
 uniform float scroll;
@@ -11,9 +12,6 @@ float map(float value, float min1, float max1, float min2, float max2) {
 }
 
 void main() {
-  vUv = uv;
-  vNoise = noise;
-
   const float animLength = 7.;
   float animTime = mod(time, animLength) / animLength;
   float animOffset = time + 1. / noise;
@@ -25,6 +23,11 @@ void main() {
   const float scale = 0.35;
   vec3 newPosition = position + vec3(x, y, z) * scale;
   vec4 worldPosition = modelViewMatrix * vec4(newPosition, 1.);
-  gl_PointSize = (75. * (1. / -worldPosition.z) * noise) + 3.;
+
+  vUv = uv;
+  vNoise = noise;
+  vPos = newPosition;
+
+  gl_PointSize = (25. * (1. / -worldPosition.z) * noise) + 3.;
   gl_Position = projectionMatrix * worldPosition;
 }
