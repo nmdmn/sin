@@ -1,4 +1,4 @@
-import perlinNoise3d from "perlin-noise-3d";
+import * as perlinNoise3d from "perlin-noise-3d";
 import * as Three from "three";
 import {Euler, Vector3} from "three";
 
