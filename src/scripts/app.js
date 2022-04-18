@@ -44,7 +44,7 @@ export default class App {
     // this.composer.addPass(this.bloomPass);
 
     this.settings.ui["bloomRadius"] = {
-      data : .0,
+      data : .4,
       min : 0,
       max : 1,
       step : 0.01,
@@ -56,7 +56,7 @@ export default class App {
       step : 0.01,
     };
     this.settings.ui["bloomThreshold"] = {
-      data : .0,
+      data : .85,
       min : 0,
       max : 1,
       step : 0.01,
