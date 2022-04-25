@@ -1,3 +1,4 @@
+import SimplexNoise from "simplex-noise";
 import * as Three from "three";
 import {Euler, Vector3} from "three";
 
@@ -68,16 +69,24 @@ export default class Sketch {
     const length = size / unit;
     const numVertices = length * length * length;
     const position = new Float32Array(numVertices * 3);
+    const noise = new Float32Array(numVertices);
+    const sampler = new SimplexNoise();
     for (let nX = 0; nX < length; nX++) {
       for (let nY = 0; nY < length; nY++) {
         for (let nZ = 0; nZ < length; nZ++) {
           // XXX fukkin chirst its ugly
-          position.set([ nX - length / 2, nY - length / 2, nZ - length / 2 ],
+          const x = (nX - length / 2) * unit;
+          const y = (nY - length / 2) * unit;
+          const z = (nZ - length / 2) * unit;
+          position.set([ x, y, z ],
                        nX * length * length * 3 + nY * length * 3 + nZ * 3);
+          noise[nX * length * length + nY * length + nZ] =
+              sampler.noise3D(x, y, z);
         }
       }
     }
-    return new Three.BufferGeometry().setAttribute(
-        "position", new Three.BufferAttribute(position, 3));
+    return new Three.BufferGeometry()
+        .setAttribute("position", new Three.BufferAttribute(position, 3))
+        .setAttribute("noise", new Three.BufferAttribute(noise, 1));
   }
 }
