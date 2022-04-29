@@ -28,7 +28,7 @@ export default class Sketch {
 
     const app = new App(args, settings);
     const shader = this.initShader(app, settings);
-    const geometry = this.initGeometry(10, 1);
+    const geometry = this.initGeometry(40, 10);
 
     const mesh = new Three.Points(geometry, shader);
     app.scene.add(mesh);
@@ -67,7 +67,7 @@ export default class Sketch {
 
   initGeometry(size, unit) {
     const length = size / unit;
-    const numVertices = length * length * length;
+    const numVertices = length ** 3;
     const position = new Float32Array(numVertices * 3);
     const noise = new Float32Array(numVertices);
     const sampler = new SimplexNoise();
@@ -79,9 +79,8 @@ export default class Sketch {
           const y = (nY - length / 2) * unit;
           const z = (nZ - length / 2) * unit;
           position.set([ x, y, z ],
-                       nX * length * length * 3 + nY * length * 3 + nZ * 3);
-          noise[nX * length * length + nY * length + nZ] =
-              sampler.noise3D(x, y, z);
+                       nX * length ** 2 * 3 + nY * length * 3 + nZ * 3);
+          noise[nX * length ** 2 + nY * length + nZ] = sampler.noise3D(x, y, z);
         }
       }
     }
