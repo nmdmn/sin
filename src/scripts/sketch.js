@@ -43,17 +43,11 @@ export default class Sketch {
       app.camera.lookAt(new Vector3(0., 0., 0.));
     });
 
-    const coords = {
-      x : app.camera.position.x,
-      y : app.camera.position.y,
-      z : app.camera.position.z
-    };
+    const coords = {x : app.camera.position.x, y : app.camera.position.y, z : app.camera.position.z};
     new Tween.Tween(coords)
         .to({x : 10., y : 10., z : 10.}, 3000)
-        .easing(
-            Tween.Easing.Back
-                .In) // NOTE
-                     // https://sole.github.io/tween.js/examples/03_graphs.html
+        .easing(Tween.Easing.Back.In) // NOTE
+                                      // https://sole.github.io/tween.js/examples/03_graphs.html
         .onUpdate(() => app.camera.position.set(coords.x, coords.y, coords.z))
         .start();
 
@@ -62,8 +56,7 @@ export default class Sketch {
         .to({x : 15., y : 15., z : -5.}, 5000)
         .easing(Tween.Easing.Back.InOut)
         .delay(3000)
-        .onUpdate(() =>
-                      app.camera.position.set(coords2.x, coords2.y, coords2.z))
+        .onUpdate(() => app.camera.position.set(coords2.x, coords2.y, coords2.z))
         .start();
 
     app.start();
@@ -97,11 +90,9 @@ export default class Sketch {
   initGeometry(size, resolution) {
     const unit = size / resolution;
     const numVertices = resolution ** 3; // NOTE its a cube
-    const positionVBO = new BufferObject(
-        numVertices,
-        3); // NOTE 3d positions, hence num of components per vertex is 3
-    const noiseVBO =
-        new BufferObject(numVertices, 1); // NOTE its a single float normalized
+    const positionVBO = new BufferObject(numVertices,
+                                         3);           // NOTE 3d positions, hence num of components per vertex is 3
+    const noiseVBO = new BufferObject(numVertices, 1); // NOTE its a single float normalized
     const sampler = new SimplexNoise();
     for (let nY = 0; nY < resolution; nY++) {
       for (let nZ = 0; nZ < resolution; nZ++) {
@@ -115,10 +106,7 @@ export default class Sketch {
       }
     }
     return new Three.BufferGeometry()
-        .setAttribute("position",
-                      new Three.BufferAttribute(positionVBO.dataArray,
-                                                positionVBO.numComponents))
-        .setAttribute("noise", new Three.BufferAttribute(
-                                   noiseVBO.dataArray, noiseVBO.numComponents));
+        .setAttribute("position", new Three.BufferAttribute(positionVBO.dataArray, positionVBO.numComponents))
+        .setAttribute("noise", new Three.BufferAttribute(noiseVBO.dataArray, noiseVBO.numComponents));
   }
 }

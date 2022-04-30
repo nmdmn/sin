@@ -17,9 +17,8 @@ export class App {
       antialias : true,
     });
     this.renderer.setClearColor(this.settings.display.clearColor);
-    this.camera = new Three.PerspectiveCamera(
-        this.settings.camera.fov / 2, window.innerWidth / window.innerHeight,
-        this.settings.camera.nearZ, this.settings.camera.farZ);
+    this.camera = new Three.PerspectiveCamera(this.settings.camera.fov / 2, window.innerWidth / window.innerHeight,
+                                              this.settings.camera.nearZ, this.settings.camera.farZ);
     this.camera.position.copy(this.settings.camera.position);
     this.camera.rotation.copy(this.settings.camera.rotation);
     this.cameraControl = new OrbitControls(this.camera, this.canvas);
@@ -44,12 +43,9 @@ export class App {
         this.gui.addColor(uiItem, "value").name(uiItemName);
       }
       if (uiItem.hasOwnProperty("listen") && uiItem.listen) {
-        this.gui.add(uiItem, "value", uiItem.min, uiItem.max, uiItem.step)
-            .name(uiItemName)
-            .listen();
+        this.gui.add(uiItem, "value", uiItem.min, uiItem.max, uiItem.step).name(uiItemName).listen();
       } else {
-        this.gui.add(uiItem, "value", uiItem.min, uiItem.max, uiItem.step)
-            .name(uiItemName)
+        this.gui.add(uiItem, "value", uiItem.min, uiItem.max, uiItem.step).name(uiItemName)
       }
     }
   }
