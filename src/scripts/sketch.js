@@ -46,8 +46,7 @@ export default class Sketch {
     const coords = {x : app.camera.position.x, y : app.camera.position.y, z : app.camera.position.z};
     new Tween.Tween(coords)
         .to({x : 10., y : 10., z : 10.}, 3000)
-        .easing(Tween.Easing.Back.In) // NOTE
-                                      // https://sole.github.io/tween.js/examples/03_graphs.html
+        .easing(Tween.Easing.Back.In) // NOTE https://sole.github.io/tween.js/examples/03_graphs.html
         .onUpdate(() => app.camera.position.set(coords.x, coords.y, coords.z))
         .start();
 
@@ -89,10 +88,9 @@ export default class Sketch {
 
   initGeometry(size, resolution) {
     const unit = size / resolution;
-    const numVertices = resolution ** 3; // NOTE its a cube
-    const positionVBO = new BufferObject(numVertices,
-                                         3);           // NOTE 3d positions, hence num of components per vertex is 3
-    const noiseVBO = new BufferObject(numVertices, 1); // NOTE its a single float normalized
+    const numVertices = resolution ** 3;                  // NOTE its a cube
+    const positionVBO = new BufferObject(numVertices, 3); // NOTE 3d positions, num of comps per vertex is 3
+    const noiseVBO = new BufferObject(numVertices, 1);    // NOTE its a single float normalized
     const sampler = new SimplexNoise();
     for (let nY = 0; nY < resolution; nY++) {
       for (let nZ = 0; nZ < resolution; nZ++) {
