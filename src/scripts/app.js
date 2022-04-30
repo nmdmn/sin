@@ -2,7 +2,7 @@ import * as Dat from "dat.gui";
 import * as Three from "three";
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 
-export default class App {
+export class App {
   constructor(args, settings) {
     this.canvas = document.querySelector(args.querySelect);
 
@@ -79,4 +79,17 @@ export default class App {
   }
 
   start() { this.tick(); }
+}
+
+export class BufferObject {
+  constructor(size, numComponents) {
+    this.dataArray = new Float32Array(size * numComponents);
+    this.numComponents = numComponents;
+    this.currentIt = 0;
+  }
+
+  add(data) {
+    this.dataArray.set(data, this.currentIt);
+    this.currentIt += this.numComponents;
+  }
 }

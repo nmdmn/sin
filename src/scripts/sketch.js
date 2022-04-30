@@ -2,7 +2,7 @@ import SimplexNoise from "simplex-noise";
 import * as Three from "three";
 import {Euler, Vector3} from "three";
 
-import App from "./app.js";
+import {App, BufferObject} from "./app.js";
 import FragmentShader from "./shaders/fDefault.glsl";
 import VertexShader from "./shaders/vDefault.glsl";
 
@@ -28,7 +28,7 @@ export default class Sketch {
 
     const app = new App(args, settings);
     const shader = this.initShader(app, settings);
-    const geometry = this.initGeometry(40, 10);
+    const geometry = this.initGeometry(10, 10);
 
     const mesh = new Three.Points(geometry, shader);
     app.scene.add(mesh);
@@ -46,13 +46,13 @@ export default class Sketch {
     return new Three.ShaderMaterial({
       side : Three.DoubleSide,
       clipping : true,
-      fog : true,
-      wireframe : true,
+      fog : false,
+      wireframe : false,
       blending : Three.AdditiveBlending,
       extensions : {
         derivates : "#extensions GL_OES_standard_derivates : enable",
         fragDepth : true,
-        drawBuffers : false,
+        drawBuffers : true,
         shaderTextureLOD : false,
       },
       uniforms : {
@@ -65,27 +65,31 @@ export default class Sketch {
     });
   }
 
-  initGeometry(size, unit) {
-    const length = size / unit;
-    const numVertices = length ** 3;
-    const position = new Float32Array(numVertices * 3);
-    const noise = new Float32Array(numVertices);
+  initGeometry(size, resolution) {
+    const unit = size / resolution;
+    const numVertices = resolution ** 3; // NOTE its a cube
+    const positionVBO = new BufferObject(
+        numVertices,
+        3); // NOTE 3d positions, hence num of components per vertex is 3
+    const noiseVBO =
+        new BufferObject(numVertices, 1); // NOTE its a single float normalized
     const sampler = new SimplexNoise();
-    for (let nX = 0; nX < length; nX++) {
-      for (let nY = 0; nY < length; nY++) {
-        for (let nZ = 0; nZ < length; nZ++) {
-          // XXX fukkin chirst its ugly
-          const x = (nX - length / 2) * unit;
-          const y = (nY - length / 2) * unit;
-          const z = (nZ - length / 2) * unit;
-          position.set([ x, y, z ],
-                       nX * length ** 2 * 3 + nY * length * 3 + nZ * 3);
-          noise[nX * length ** 2 + nY * length + nZ] = sampler.noise3D(x, y, z);
+    for (let nZ = 0; nZ < resolution; nZ++) {
+      for (let nY = 0; nY < resolution; nY++) {
+        for (let nX = 0; nX < resolution; nX++) {
+          const x = nX * unit - size / 2;
+          const y = nY * unit - size / 2;
+          const z = nZ * unit - size / 2;
+          positionVBO.add([ x, y, z ]);
+          noiseVBO.add([ sampler.noise3D(x, y, z) ]);
         }
       }
     }
     return new Three.BufferGeometry()
-        .setAttribute("position", new Three.BufferAttribute(position, 3))
-        .setAttribute("noise", new Three.BufferAttribute(noise, 1));
+        .setAttribute("position",
+                      new Three.BufferAttribute(positionVBO.dataArray,
+                                                positionVBO.numComponents))
+        .setAttribute("noise", new Three.BufferAttribute(
+                                   noiseVBO.dataArray, noiseVBO.numComponents));
   }
 }
