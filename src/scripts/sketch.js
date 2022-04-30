@@ -29,7 +29,7 @@ export default class Sketch {
 
     const app = new App(args, settings);
     const shader = this.initShader(app, settings);
-    const geometry = this.initGeometry(10, 8);
+    const geometry = this.initGeometry(10, 4);
 
     const mesh = new Three.Points(geometry, shader);
     app.scene.add(mesh);
@@ -59,7 +59,7 @@ export default class Sketch {
 
     const coords2 = {x : 10., y : 10., z : 10.};
     new Tween.Tween(coords2)
-        .to({x : 0., y : 33., z : -33.}, 5000)
+        .to({x : 15., y : 15., z : -5.}, 5000)
         .easing(Tween.Easing.Back.InOut)
         .delay(3000)
         .onUpdate(() =>
@@ -75,12 +75,14 @@ export default class Sketch {
       clipping : true,
       fog : false,
       wireframe : false,
-      blending : Three.AdditiveBlending,
+      // blending : Three.AdditiveBlending,
+      transparent : true,
+      depthWrite : false,
       extensions : {
         derivates : "#extensions GL_OES_standard_derivates : enable",
-        fragDepth : true,
-        drawBuffers : true,
-        shaderTextureLOD : false,
+        // fragDepth : false,
+        // drawBuffers : true,
+        // shaderTextureLOD : false,
       },
       uniforms : {
         time : {type : "f", value : app.clock.getElapsedTime()},
@@ -104,9 +106,9 @@ export default class Sketch {
     for (let nY = 0; nY < resolution; nY++) {
       for (let nZ = 0; nZ < resolution; nZ++) {
         for (let nX = 0; nX < resolution; nX++) {
-          const x = nX * unit - size / 2;
-          const y = nY * unit - size / 2;
-          const z = nZ * unit - size / 2;
+          const x = (nX + .5) * unit - size / 2;
+          const y = (nY + .5) * unit - size / 2;
+          const z = (nZ + .5) * unit - size / 2;
           positionVBO.add([ x, y, z ]);
           noiseVBO.add([ sampler.noise3D(x, y, z) ]);
         }
