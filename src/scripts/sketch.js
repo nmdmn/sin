@@ -40,7 +40,6 @@ export default class Sketch {
       shader.uniforms["scroll"].value = window.scrollY;
       shader.uniforms["alpha"].value = settings.ui.alpha.value;
       Tween.update();
-      app.camera.lookAt(new Vector3(0., 0., 0.));
     });
 
     const coords = {x : app.camera.position.x, y : app.camera.position.y, z : app.camera.position.z};
@@ -55,7 +54,10 @@ export default class Sketch {
         .to({x : 15., y : 15., z : -5.}, 5000)
         .easing(Tween.Easing.Back.InOut)
         .delay(3000)
-        .onUpdate(() => app.camera.position.set(coords2.x, coords2.y, coords2.z))
+        .onUpdate(() => {
+          app.camera.position.set(coords2.x, coords2.y, coords2.z);
+          app.camera.lookAt(new Vector3(0., 0., 0.));
+        })
         .start();
 
     app.start();
