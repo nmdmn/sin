@@ -1,3 +1,4 @@
+import * as Tween from "@tweenjs/tween.js";
 import SimplexNoise from "simplex-noise";
 import * as Three from "three";
 import {Euler, Vector3} from "three";
@@ -14,7 +15,7 @@ export default class Sketch {
         nearZ : .1,
         farZ : 1000.,
         rotation : new Euler(0., 0., 0.),
-        position : new Vector3(15., 15., 15.),
+        position : new Vector3(100., 100., 100.),
       },
       ui : {
         alpha : {
@@ -34,10 +35,36 @@ export default class Sketch {
     app.scene.add(mesh);
 
     app.setUpdateCallback(dT => {
-      shader.uniforms["time"].value = app.clock.getElapsedTime();
+      const time = app.clock.getElapsedTime();
+      shader.uniforms["time"].value = time;
       shader.uniforms["scroll"].value = window.scrollY;
       shader.uniforms["alpha"].value = settings.ui.alpha.value;
+      Tween.update();
+      app.camera.lookAt(new Vector3(0., 0., 0.));
     });
+
+    const coords = {
+      x : app.camera.position.x,
+      y : app.camera.position.y,
+      z : app.camera.position.z
+    };
+    new Tween.Tween(coords)
+        .to({x : 10., y : 10., z : 10.}, 3000)
+        .easing(
+            Tween.Easing.Back
+                .In) // NOTE
+                     // https://sole.github.io/tween.js/examples/03_graphs.html
+        .onUpdate(() => app.camera.position.set(coords.x, coords.y, coords.z))
+        .start();
+
+    const coords2 = {x : 10., y : 10., z : 10.};
+    new Tween.Tween(coords2)
+        .to({x : 0., y : 33., z : -33.}, 5000)
+        .easing(Tween.Easing.Back.InOut)
+        .delay(3000)
+        .onUpdate(() =>
+                      app.camera.position.set(coords2.x, coords2.y, coords2.z))
+        .start();
 
     app.start();
   }
