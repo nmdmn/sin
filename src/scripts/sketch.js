@@ -28,7 +28,7 @@ export default class Sketch {
 
     const app = new App(args, settings);
     const shader = this.initShader(app, settings);
-    const geometry = this.initGeometry(10, 10);
+    const geometry = this.initGeometry(10, 8);
 
     const mesh = new Three.Points(geometry, shader);
     app.scene.add(mesh);
@@ -74,8 +74,8 @@ export default class Sketch {
     const noiseVBO =
         new BufferObject(numVertices, 1); // NOTE its a single float normalized
     const sampler = new SimplexNoise();
-    for (let nZ = 0; nZ < resolution; nZ++) {
-      for (let nY = 0; nY < resolution; nY++) {
+    for (let nY = 0; nY < resolution; nY++) {
+      for (let nZ = 0; nZ < resolution; nZ++) {
         for (let nX = 0; nX < resolution; nX++) {
           const x = nX * unit - size / 2;
           const y = nY * unit - size / 2;
