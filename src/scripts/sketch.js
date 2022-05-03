@@ -69,7 +69,7 @@ export default class Sketch {
       clipping : true,
       fog : false,
       wireframe : false,
-      // blending : Three.AdditiveBlending,
+      blending : Three.AdditiveBlending,
       transparent : true,
       depthWrite : false,
       extensions : {
