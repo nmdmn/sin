@@ -1,4 +1,3 @@
-import * as Dat from "dat.gui";
 import * as Three from "three";
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 
@@ -8,9 +7,8 @@ export class App {
 
     this.settings = settings;
     this.settings.display = {
-      clearColor : 0x000000,
+      clearColor : 0xff0000,
     };
-
     this.scene = new Three.Scene();
     this.renderer = new Three.WebGL1Renderer({
       canvas : this.canvas,
@@ -23,31 +21,11 @@ export class App {
     this.camera.rotation.copy(this.settings.camera.rotation);
     this.cameraControl = new OrbitControls(this.camera, this.canvas);
 
-    this.setupUi();
-
     this.onResize();
     window.addEventListener('resize', () => { this.onResize(); }, false);
     window.addEventListener('keydown', event => { this.onKey(event); });
 
     this.clock = new Three.Clock();
-  }
-
-  setupUi() {
-    this.gui = new Dat.GUI();
-
-    const uiSettingsPropNames = Object.getOwnPropertyNames(this.settings.ui);
-    for (let uiItemId in uiSettingsPropNames) {
-      const uiItemName = uiSettingsPropNames[uiItemId];
-      const uiItem = this.settings.ui[uiItemName];
-      if (uiItem.hasOwnProperty("type") && uiItem.type == "color") {
-        this.gui.addColor(uiItem, "value").name(uiItemName);
-      }
-      if (uiItem.hasOwnProperty("listen") && uiItem.listen) {
-        this.gui.add(uiItem, "value", uiItem.min, uiItem.max, uiItem.step).name(uiItemName).listen();
-      } else {
-        this.gui.add(uiItem, "value", uiItem.min, uiItem.max, uiItem.step).name(uiItemName)
-      }
-    }
   }
 
   setUpdateCallback(updateCallback) { this.updateCallback = updateCallback; }
@@ -61,7 +39,7 @@ export class App {
   onKey(event) {
     switch (event.key) {
     case "Escape":
-      Dat.GUI.toggleHide();
+      console.log("NAAAH!");
       break;
     }
   }
@@ -69,22 +47,10 @@ export class App {
   tick() {
     this.updateCallback(this.clock.getDelta());
     this.renderer.render(this.scene, this.camera);
+    console.log(this.camera.position);
 
     window.requestAnimationFrame(this.tick.bind(this));
   }
 
   start() { this.tick(); }
-}
-
-export class BufferObject {
-  constructor(size, numComponents) {
-    this.dataArray = new Float32Array(size * numComponents);
-    this.numComponents = numComponents;
-    this.currentIt = 0;
-  }
-
-  add(data) {
-    this.dataArray.set(data, this.currentIt);
-    this.currentIt += this.numComponents;
-  }
 }

@@ -1,11 +1,9 @@
-import * as Tween from "@tweenjs/tween.js";
-import SimplexNoise from "simplex-noise";
 import * as Three from "three";
-import {Euler, Vector3} from "three";
+import {Euler, Vector3} from "three"
+import {MTLLoader} from "three/examples/jsm/loaders/MTLLoader";
+import {OBJLoader} from "three/examples/jsm/loaders/OBJLoader";
 
-import {App, BufferObject} from "./app.js";
-import FragmentShader from "./shaders/fDefault.glsl";
-import VertexShader from "./shaders/vDefault.glsl";
+import {App} from "./app.js";
 
 export default class Sketch {
   constructor(args) {
@@ -15,98 +13,44 @@ export default class Sketch {
         nearZ : .1,
         farZ : 1000.,
         rotation : new Euler(0., 0., 0.),
-        position : new Vector3(100., 100., 100.),
+        position : new Vector3(0., 0., 250.),
       },
       ui : {
-        alpha : {
-          value : .33,
-          min : .0,
-          max : 1.,
-          step : .01,
-        }
+          // alpha : {
+          //  value : .33,
+          //  min : .0,
+          //  max : 1.,
+          //  step : .01,
+          //}
       },
     };
 
     const app = new App(args, settings);
-    const shader = this.initShader(app, settings);
-    const geometry = this.initGeometry(10, 4);
+    const ambientLight = new Three.AmbientLight(0xcccccc, 0.4);
+    app.scene.add(ambientLight);
 
-    const mesh = new Three.Points(geometry, shader);
-    app.scene.add(mesh);
+    const pointLight = new Three.PointLight(0xffffff, 0.8);
+    app.camera.add(pointLight);
 
-    app.setUpdateCallback(dT => {
-      const time = app.clock.getElapsedTime();
-      shader.uniforms["time"].value = time;
-      shader.uniforms["scroll"].value = window.scrollY;
-      shader.uniforms["alpha"].value = settings.ui.alpha.value;
-      Tween.update();
-    });
+    new MTLLoader()
+        .setPath("../../obj/guitar/")
+        .load(
+            "guitar.mtl",
+            function(materials) {
+              materials.preload();
 
-    const coords = {x : app.camera.position.x, y : app.camera.position.y, z : app.camera.position.z};
-    new Tween.Tween(coords)
-        .to({x : 10., y : 10., z : 10.}, 3000)
-        .easing(Tween.Easing.Back.In) // NOTE https://sole.github.io/tween.js/examples/03_graphs.html
-        .onUpdate(() => app.camera.position.set(coords.x, coords.y, coords.z))
-        .start();
+              new OBJLoader().setMaterials(materials).setPath("../../obj/guitar/").load("guitar.obj", function(object) {
+                object.position.y = -95;
+                app.scene.add(object);
+              }, undefined);
+            },
+            xhr => {
+              const percentComplete = xhr.loaded / xhr.total * 100;
+              console.warn(Math.round(percentComplete, 2) + "% downloaded");
+            });
 
-    const coords2 = {x : 10., y : 10., z : 10.};
-    new Tween.Tween(coords2)
-        .to({x : 15., y : 15., z : -5.}, 5000)
-        .easing(Tween.Easing.Back.InOut)
-        .delay(3000)
-        .onUpdate(() => {
-          app.camera.position.set(coords2.x, coords2.y, coords2.z);
-          app.camera.lookAt(new Vector3(0., 0., 0.));
-        })
-        .start();
+    app.setUpdateCallback(dT => { const time = app.clock.getElapsedTime(); });
 
     app.start();
-  }
-
-  initShader(app, settings) {
-    return new Three.ShaderMaterial({
-      side : Three.DoubleSide,
-      clipping : true,
-      fog : false,
-      wireframe : false,
-      blending : Three.AdditiveBlending,
-      transparent : true,
-      depthWrite : false,
-      extensions : {
-        derivates : "#extensions GL_OES_standard_derivates : enable",
-        // fragDepth : false,
-        // drawBuffers : true,
-        // shaderTextureLOD : false,
-      },
-      uniforms : {
-        time : {type : "f", value : app.clock.getElapsedTime()},
-        scroll : {type : "f", value : window.scrollY},
-        alpha : {type : "f", value : settings.ui.alpha.value},
-      },
-      vertexShader : VertexShader,
-      fragmentShader : FragmentShader,
-    });
-  }
-
-  initGeometry(size, resolution) {
-    const unit = size / resolution;
-    const numVertices = resolution ** 3;                  // NOTE its a cube
-    const positionVBO = new BufferObject(numVertices, 3); // NOTE 3d positions, num of comps per vertex is 3
-    const noiseVBO = new BufferObject(numVertices, 1);    // NOTE its a single float normalized
-    const sampler = new SimplexNoise();
-    for (let nY = 0; nY < resolution; nY++) {
-      for (let nZ = 0; nZ < resolution; nZ++) {
-        for (let nX = 0; nX < resolution; nX++) {
-          const x = (nX + .5) * unit - size / 2;
-          const y = (nY + .5) * unit - size / 2;
-          const z = (nZ + .5) * unit - size / 2;
-          positionVBO.add([ x, y, z ]);
-          noiseVBO.add([ sampler.noise3D(x, y, z) ]);
-        }
-      }
-    }
-    return new Three.BufferGeometry()
-        .setAttribute("position", new Three.BufferAttribute(positionVBO.dataArray, positionVBO.numComponents))
-        .setAttribute("noise", new Three.BufferAttribute(noiseVBO.dataArray, noiseVBO.numComponents));
   }
 }
