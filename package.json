@@ -2,7 +2,7 @@
   "name": "sin",
   "version": "0.0.0",
   "description": "threejs sandbox",
-  "repository": "asd",
+  "repository": "https://github.com/nmdmn/sin",
   "author": "nmd",
   "license": "MIT",
   "scripts": {
