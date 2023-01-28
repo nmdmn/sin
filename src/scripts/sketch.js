@@ -1,4 +1,4 @@
-import SimplexNoise from "simplex-noise";
+import {createNoise3D} from "simplex-noise";
 import * as Three from "three";
 import {Euler, Vector3} from "three";
 
@@ -63,14 +63,14 @@ export default class Sketch {
     const posArrayLen = geometry.attributes.position.array.length;
     const numVertices = posArrayLen / 3;
     const noisePerVertex = new Float32Array(numVertices);
-    const noise = new SimplexNoise();
+    const noise = new createNoise3D();
     noise.perlin_octaves = 8;
     for (let i = 0; i < posArrayLen; i += 3) {
-      const offset = 1;
+      const offset = 0.5;
       const noiseVal =
-          noise.noise3D(geometry.attributes.position.array[i] * offset,
-                        geometry.attributes.position.array[i + 1] * offset,
-                        geometry.attributes.position.array[i + 2] * offset);
+          noise(geometry.attributes.position.array[i] * offset,
+                geometry.attributes.position.array[i + 1] * offset,
+                geometry.attributes.position.array[i + 2] * offset);
       noisePerVertex.set([ noiseVal ], i / 3);
     }
 
