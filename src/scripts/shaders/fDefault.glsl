@@ -13,5 +13,5 @@ void main() {
   float alpha = 1. - smoothstep(-.2, .5, length(gl_PointCoord - vec2(.5)));
   float intensity = smoothstep(0., 2., vUv.x);
   gl_FragColor =
-      vec4(mix(coldColor, hotColor, vNoise * vPos.z * 4.), alpha * intensity);
+      vec4(mix(coldColor, hotColor, vNoise * vPos.z * 40.), alpha * intensity);
 }
