@@ -1,5 +1,5 @@
 import * as Tween from "@tweenjs/tween.js";
-import SimplexNoise from "simplex-noise";
+import {createNoise3D} from "simplex-noise";
 import * as Three from "three";
 import {Euler, Vector3} from "three";
 
@@ -93,7 +93,7 @@ export default class Sketch {
     const numVertices = resolution ** 3;                  // NOTE its a cube
     const positionVBO = new BufferObject(numVertices, 3); // NOTE 3d positions, num of comps per vertex is 3
     const noiseVBO = new BufferObject(numVertices, 1);    // NOTE its a single float normalized
-    const sampler = new SimplexNoise();
+    const sampler = new createNoise3D();
     for (let nY = 0; nY < resolution; nY++) {
       for (let nZ = 0; nZ < resolution; nZ++) {
         for (let nX = 0; nX < resolution; nX++) {
@@ -101,7 +101,7 @@ export default class Sketch {
           const y = (nY + .5) * unit - size / 2;
           const z = (nZ + .5) * unit - size / 2;
           positionVBO.add([ x, y, z ]);
-          noiseVBO.add([ sampler.noise3D(x, y, z) ]);
+          noiseVBO.add([ sampler(x, y, z) ]);
         }
       }
     }
