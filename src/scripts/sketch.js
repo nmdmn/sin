@@ -1,6 +1,7 @@
 import {createNoise3D} from "simplex-noise";
 import * as Three from "three";
 import {Euler, Vector3} from "three";
+import MusicUrl from "url:./audio/nmd-pulsar.wav"
 
 import App from "./app.js";
 import FragmentShader from "./shaders/fDefault.glsl";
@@ -29,12 +30,27 @@ export default class Sketch {
         nearZ : .1,
         farZ : 1000.,
         rotation : new Euler(0., 0., 0.),
-        position : new Vector3(-.5, 0., 5.6),
+        position : new Vector3(0, 0., 5.6),
       },
       ui : {},
+      listener : new Three.AudioListener(),
     };
 
     const app = new App(args, settings);
+
+    const sound = new Three.Audio(app.settings.listener);
+    const loader = new Three.AudioLoader();
+
+    window.addEventListener('click', () => {
+      loader.load(MusicUrl, buffer => {
+        sound.setBuffer(buffer);
+        sound.setLoop(true);
+        sound.setVolume(.5);
+        sound.play();
+      });
+    });
+
+    const analyser = new Three.AudioAnalyser(sound, 32);
 
     const defaultShader = new Three.ShaderMaterial({
       side : Three.DoubleSide,
@@ -54,6 +70,7 @@ export default class Sketch {
       uniforms : {
         time : {type : "f", value : app.clock.getElapsedTime()},
         scroll : {type : "f", value : window.scrollY},
+        avgFreq : {type : "f", value : analyser.getAverageFrequency()}
       },
       vertexShader : VertexShader,
       fragmentShader : FragmentShader,
@@ -82,6 +99,8 @@ export default class Sketch {
     app.setUpdateCallback(dT => {
       defaultShader.uniforms["time"].value = app.clock.getElapsedTime();
       defaultShader.uniforms["scroll"].value = window.scrollY;
+      defaultShader.uniforms["avgFreq"].value =
+          analyser.getAverageFrequency() / 1000;
     });
 
     app.start();

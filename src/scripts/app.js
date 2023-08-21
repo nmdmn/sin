@@ -34,6 +34,7 @@ export default class App {
     this.cameraControl = new FlyControls(this.camera, this.canvas);
     this.cameraControl.rollSpeed = .25;
 
+    this.camera.add(this.settings.listener);
     this.scenePass = new RenderPass(this.scene, this.camera);
 
     this.bloomPass = new UnrealBloomPass(
