@@ -5,7 +5,7 @@
 ## usage
 install
 ```sh
-yarn install
+yarn install && yarn upgrade-interactive --latest
 ```
 
 build
