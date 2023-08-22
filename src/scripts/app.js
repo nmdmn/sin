@@ -43,7 +43,7 @@ export default class App {
 
     this.composer = new EffectComposer(this.renderer);
     this.composer.addPass(this.scenePass);
-    this.composer.addPass(this.bloomPass);
+    // this.composer.addPass(this.bloomPass);
 
     this.settings.ui["bloomRadius"] = {
       data : .33,
