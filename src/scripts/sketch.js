@@ -50,7 +50,10 @@ export default class Sketch {
       });
     });
 
-    const analyser = new Three.AudioAnalyser(sound, 32);
+    const fftSize = 1024;
+    const analyser = new Three.AudioAnalyser(sound, fftSize);
+    const format = (app.renderer.capabilities.isWebGL2) ? Three.RedFormat
+                                                        : Three.LuminanceFormat;
 
     const defaultShader = new Three.ShaderMaterial({
       side : Three.DoubleSide,
@@ -70,7 +73,9 @@ export default class Sketch {
       uniforms : {
         time : {type : "f", value : app.clock.getElapsedTime()},
         scroll : {type : "f", value : window.scrollY},
-        avgFreq : {type : "f", value : analyser.getAverageFrequency()}
+        audioData : {
+          value : new Three.DataTexture(analyser.data, fftSize / 2, 1, format)
+        }
       },
       vertexShader : VertexShader,
       fragmentShader : FragmentShader,
@@ -97,10 +102,10 @@ export default class Sketch {
     app.scene.add(mesh);
 
     app.setUpdateCallback(dT => {
-      defaultShader.uniforms["time"].value = app.clock.getElapsedTime();
-      defaultShader.uniforms["scroll"].value = window.scrollY;
-      defaultShader.uniforms["avgFreq"].value =
-          analyser.getAverageFrequency() / 1000;
+      defaultShader.uniforms.time.value = app.clock.getElapsedTime();
+      defaultShader.uniforms.scroll.value = window.scrollY;
+      analyser.getFrequencyData();
+      defaultShader.uniforms.audioData.value.needsUpdate = true;
     });
 
     app.start();

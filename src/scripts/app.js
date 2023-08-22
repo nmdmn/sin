@@ -22,7 +22,7 @@ export default class App {
     };
 
     this.scene = new Three.Scene();
-    this.renderer = new Three.WebGL1Renderer({canvas : this.canvas});
+    this.renderer = new Three.WebGLRenderer({canvas : this.canvas});
     this.renderer.setClearColor(this.settings.display.clearColor);
     // this.renderer.antialias = true;
     // this.renderer.toneMapping = Three.ReinhardToneMapping;
