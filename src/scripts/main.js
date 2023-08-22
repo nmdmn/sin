@@ -1,7 +1,7 @@
-import Sketch from "./sketch.js";
+import AuidoVisualizer from "./audio_visualizer";
 
 function main() {
-  new Sketch({
+  new AuidoVisualizer({
     querySelect : "canvas",
   });
 }

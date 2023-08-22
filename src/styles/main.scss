@@ -1,19 +1,8 @@
-@import "nav";
-@import "section";
-
 * {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
 	scroll-behavior: smooth;
-}
-
-main {
-	font: {
-		size: $fontSizeP;
-		family: $fontFamily;
-	}
-	color: $fgColor;
 }
 
 canvas {
@@ -28,4 +17,3 @@ canvas {
   display: block;
 }
 
-@include setHeaderFontSizes($fontSizeH, $fontSizeP);

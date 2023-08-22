@@ -2,6 +2,8 @@ varying vec2 vUv;
 varying float vNoise;
 varying vec3 vPos;
 
+uniform float time;
+uniform float scroll;
 uniform sampler2D audioData;
 
 vec3 coldColor = vec3(22. / 255., 160. / 255., 133. / 255.);
@@ -12,10 +14,6 @@ float map(float value, float min1, float max1, float min2, float max2) {
 }
 
 void main() {
-  float sampledFreq = texture2D(audioData, vec2(vUv.x, vUv.y)).r;
-
   float alpha = 1. - smoothstep(-.2, .5, length(gl_PointCoord - vec2(.5)));
-  float intensity = sampledFreq; // dafukk is this?
-  gl_FragColor =
-      vec4(mix(coldColor, hotColor, vNoise * vPos.z * 40.), alpha * intensity);
+  gl_FragColor = vec4(mix(coldColor, hotColor, vNoise * vPos.z * 40.), alpha);
 }
