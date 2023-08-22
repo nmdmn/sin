@@ -30,7 +30,7 @@ export default class Sketch {
         nearZ : .1,
         farZ : 1000.,
         rotation : new Euler(0., 0., 0.),
-        position : new Vector3(0, 0., 5.6),
+        position : new Vector3(0, 0., 20),
       },
       ui : {},
       listener : new Three.AudioListener(),
@@ -80,7 +80,7 @@ export default class Sketch {
       vertexShader : VertexShader,
       fragmentShader : FragmentShader,
     });
-    const geometry = new Three.PlaneGeometry(7, 7, 140, 140);
+    const geometry = new Three.PlaneGeometry(10, 10, 100, 100);
     // XXX clearup this shit, ugly
     const posArrayLen = geometry.attributes.position.array.length;
     const numVertices = posArrayLen / 3;

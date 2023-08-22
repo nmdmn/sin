@@ -12,7 +12,7 @@ float map(float value, float min1, float max1, float min2, float max2) {
 }
 
 void main() {
-  float sampledFreq = texture2D(audioData, vec2(vUv.x, 0.0)).r;
+  float sampledFreq = texture2D(audioData, vec2(vUv.x, vUv.y)).r;
 
   float alpha = 1. - smoothstep(-.2, .5, length(gl_PointCoord - vec2(.5)));
   float intensity = sampledFreq; // dafukk is this?
