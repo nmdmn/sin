@@ -13,13 +13,14 @@ float map(float value, float min1, float max1, float min2, float max2) {
 }
 
 void main() {
+  float freq = texture2D(audioData, vec2(noise * 1.25, 0.)).r;
   float animOffset = time + 1. / noise;
   float theta = animOffset / 3.;
   float phi = animOffset / 7.;
   float x = smoothstep(-.03, .03, sin(theta) * cos(phi));
   float y = smoothstep(-.103, .103, sin(theta) * sin(phi));
   float z = smoothstep(-.33, .33, cos(theta));
-  const float scale = 0.04;
+  float scale = freq;
   vec3 newPosition = position + vec3(x, y, z) * scale;
   vec4 worldPosition = modelViewMatrix * vec4(newPosition, 1.);
 

@@ -1,7 +1,7 @@
 import {createNoise3D} from "simplex-noise";
 import * as Three from "three";
 import {Euler, Vector3} from "three";
-import MusicUrl from "url:../audio/nmd-pulsar.wav"
+import MusicUrl from "url:../audio/nmd-pulsar.mp3"
 
 import App from "./app.js";
 import FragmentShader from "./shaders/frag.glsl";
@@ -18,7 +18,7 @@ class MusicPlayer {
       loader.load(MusicUrl, buffer => {
         this.sound.setBuffer(buffer);
         this.sound.setLoop(true);
-        this.sound.setVolume(.5);
+        this.sound.setVolume(1.);
         this.sound.play();
       });
     });
@@ -59,13 +59,13 @@ class Model {
       fragmentShader : FragmentShader,
     });
 
-    this.geometry = new Three.PlaneGeometry(10, 10, 100, 100);
+    this.geometry = new Three.PlaneGeometry(10, 10, 200, 200);
     const posArrayLen = this.geometry.attributes.position.array.length;
     const numVertices = posArrayLen / 3;
     const noisePerVertex = new Float32Array(numVertices);
     const noise = new createNoise3D();
     for (let i = 0; i < posArrayLen; i += 3) {
-      const offset = 0.5;
+      const offset = 0.15;
       const noiseVal =
           noise(this.geometry.attributes.position.array[i] * offset,
                 this.geometry.attributes.position.array[i + 1] * offset,
@@ -75,7 +75,8 @@ class Model {
     this.geometry.setAttribute("noise",
                                new Three.BufferAttribute(noisePerVertex, 1));
 
-    app.scene.add(new Three.Points(this.geometry, this.shader));
+    this.mesh = new Three.Points(this.geometry, this.shader);
+    app.scene.add(this.mesh);
   }
 }
 
@@ -84,8 +85,8 @@ export default class AuidoVisualizer {
     args.clearColor = 0x111111;
     args.camera = new Three.PerspectiveCamera(
         63 / 2, window.innerWidth / window.innerHeight, .1, 1000.);
-    args.camera.position.copy(new Vector3(0., 0., 20.));
-    args.camera.rotation.copy(new Euler(0., 0., 0.));
+    args.camera.position.copy(new Vector3(.35, .25, 7.));
+    args.camera.rotation.copy(new Euler(0., 0., 0.))
 
     const app = new App(args);
 
