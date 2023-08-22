@@ -25,7 +25,7 @@ export default class App {
     this.cameraControl.rollSpeed = .25;
     this.scenePass = new RenderPass(this.scene, this.camera);
     this.bloomPass = new UnrealBloomPass(
-        new Three.Vector2(window.innerWidth, window.innerHeight), .0, .0, .0);
+        new Three.Vector2(window.innerWidth, window.innerHeight), 1.5, 1., 0.);
     this.composer = new EffectComposer(this.renderer);
     this.composer.addPass(this.scenePass);
     // this.composer.addPass(this.bloomPass);

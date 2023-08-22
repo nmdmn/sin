@@ -15,12 +15,16 @@ class MusicPlayer {
     const loader = new Three.AudioLoader();
 
     window.addEventListener('click', () => {
-      loader.load(MusicUrl, buffer => {
-        this.sound.setBuffer(buffer);
-        this.sound.setLoop(true);
-        this.sound.setVolume(1.);
-        this.sound.play();
-      });
+      if (this.sound.isPlaying) {
+        this.sound.stop();
+      } else {
+        loader.load(MusicUrl, buffer => {
+          this.sound.setBuffer(buffer);
+          this.sound.setLoop(true);
+          this.sound.setVolume(1.);
+          this.sound.play();
+        });
+      }
     });
 
     this.fftSize = 1024;
