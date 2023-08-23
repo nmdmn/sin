@@ -14,8 +14,6 @@ float map(float value, float min1, float max1, float min2, float max2) {
 }
 
 void main() {
-  float freq = smoothstep(.1, .5, texture2D(audioData, vec2(vNoise, 0.)).r);
-  float alpha = 1. - smoothstep(-.2, .5, length(gl_PointCoord - vec2(.5)));
-  gl_FragColor =
-      vec4(mix(coldColor, hotColor, vNoise * vPos.z * 40.), alpha * freq);
+  float alpha = 1. - smoothstep(0., .5, length(gl_PointCoord - vec2(.5)));
+  gl_FragColor = vec4(mix(coldColor, hotColor, vNoise), alpha);
 }

@@ -27,7 +27,7 @@ class MusicPlayer {
       }
     });
 
-    this.fftSize = 1024;
+    this.fftSize = 2048;
     this.analyser = new Three.AudioAnalyser(this.sound, this.fftSize);
   }
 }
@@ -42,7 +42,7 @@ class Model {
       transparent : true,
       depthTest : false,
       depthWrite : false,
-      blending : Three.AdditiveBlending,
+      // blending : Three.AdditiveBlending,
       extensions : {
         derivates : "#extensions GL_OES_standard_derivates : enable",
         fragDepth : true,
@@ -63,13 +63,13 @@ class Model {
       fragmentShader : FragmentShader,
     });
 
-    this.geometry = new Three.PlaneGeometry(10, 10, 200, 200);
+    this.geometry = new Three.PlaneGeometry(1, 1, 100, 100);
     const posArrayLen = this.geometry.attributes.position.array.length;
     const numVertices = posArrayLen / 3;
     const noisePerVertex = new Float32Array(numVertices);
     const noise = new createNoise3D();
     for (let i = 0; i < posArrayLen; i += 3) {
-      const offset = 0.15;
+      const offset = 1;
       const noiseVal =
           noise(this.geometry.attributes.position.array[i] * offset,
                 this.geometry.attributes.position.array[i + 1] * offset,
@@ -89,8 +89,7 @@ export default class AuidoVisualizer {
     args.clearColor = 0x111111;
     args.camera = new Three.PerspectiveCamera(
         63 / 2, window.innerWidth / window.innerHeight, .1, 1000.);
-    args.camera.position.copy(new Vector3(.35, .25, 7.));
-    args.camera.rotation.copy(new Euler(0., 0., 0.))
+    args.camera.position.copy(new Vector3(0., 0., 2.));
 
     const app = new App(args);
 

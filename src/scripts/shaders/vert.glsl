@@ -12,22 +12,26 @@ float map(float value, float min1, float max1, float min2, float max2) {
   return min2 + (value - min1) * (max2 - min2) / (max1 - min1);
 }
 
+float toLog(float value, float min1, float max1) {
+  float exp = (value - min1) / (max1 - min1);
+  return min1 * pow(max1 / min1, exp);
+}
+
 void main() {
-  float freq = texture2D(audioData, vec2(noise * 1.25, 0.)).r;
-  float animOffset = time + 1. / noise;
-  float theta = animOffset / 3.;
-  float phi = animOffset / 7.;
-  float x = smoothstep(-.03, .03, sin(theta) * cos(phi));
-  float y = smoothstep(-.103, .103, sin(theta) * sin(phi));
-  float z = smoothstep(-.33, .33, cos(theta));
-  float scale = freq;
-  vec3 newPosition = position + vec3(x, y, z) * scale;
-  vec4 worldPosition = modelViewMatrix * vec4(newPosition, 1.);
+  float sampledFrequency =
+      texture2D(audioData, uv * .8).r; // on 48kHz, 1/5 on top is useless?
+
+  float x = position.x;
+  float y = position.y * sampledFrequency;
+  float z = position.z;
+
+  vec3 distortedPosition = vec3(x, y, z);
+  vec4 worldPosition = modelViewMatrix * vec4(distortedPosition, 1.);
 
   vUv = uv;
   vNoise = noise;
-  vPos = newPosition;
+  vPos = distortedPosition;
 
-  gl_PointSize = (24. * (1. / -worldPosition.z) * noise) + 6.;
+  gl_PointSize = 10. / -worldPosition.z;
   gl_Position = projectionMatrix * worldPosition;
 }
