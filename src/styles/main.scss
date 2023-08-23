@@ -5,6 +5,25 @@
 	scroll-behavior: smooth;
 }
 
+body {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+  justify-content: end;
+	width: 100vw;
+	height: 100vh;
+	padding-bottom: 50px;
+}
+
+audio {
+	transition:all 0.5s linear;
+	opacity: 20%;
+}
+
+audio:hover {
+	opacity: 80%;
+}
+
 canvas {
 	z-index: -1;
 	position: fixed;

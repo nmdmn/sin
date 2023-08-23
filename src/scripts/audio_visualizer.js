@@ -1,7 +1,8 @@
 import {createNoise3D} from "simplex-noise";
 import * as Three from "three";
 import {Euler, Vector3} from "three";
-import MusicUrl from "url:../audio/nmd-pulsar.mp3"
+
+// import MusicUrl from "url:../audio/nmd-pulsar.mp3"
 
 import App from "./app.js";
 import FragmentShader from "./shaders/frag.glsl";
@@ -12,12 +13,13 @@ class MusicPlayer {
     this.audioListener = new Three.AudioListener();
     app.camera.add(this.audioListener);
     this.sound = new Three.Audio(this.audioListener);
-    const loader = new Three.AudioLoader();
-    loader.load(MusicUrl, buffer => {
-      this.sound.setBuffer(buffer);
-      this.sound.setLoop(true);
-      this.sound.setVolume(1.);
-    });
+    this.sound.setMediaElementSource(document.querySelector("audio"));
+    // const loader = new Three.AudioLoader();
+    // loader.load(MusicUrl, buffer => {
+    //   this.sound.setBuffer(buffer);
+    //   this.sound.setLoop(true);
+    //   this.sound.setVolume(1.);
+    // });
 
     window.addEventListener('keydown', event => {
       switch (event.code) {
@@ -46,7 +48,7 @@ class Model {
       transparent : true,
       depthTest : false,
       depthWrite : false,
-      // blending : Three.AdditiveBlending,
+      blending : Three.AdditiveBlending,
       extensions : {
         derivates : "#extensions GL_OES_standard_derivates : enable",
         fragDepth : true,

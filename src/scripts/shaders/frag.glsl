@@ -6,6 +6,7 @@ varying float vSampledFrequency;
 uniform float time;
 uniform float scroll;
 uniform sampler2D audioData;
+uniform float loaded;
 
 vec3 coldColor = vec3(22. / 255., 160. / 255., 133. / 255.);
 vec3 hotColor = vec3(241. / 255., 196. / 255., 15. / 255.);
