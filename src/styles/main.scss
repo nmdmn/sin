@@ -13,11 +13,7 @@ body {
 }
 
 main {
-	display: flex;
-	align-items: center;
-	flex-direction: column;
-  justify-content: first;
-	padding-top: 50px;
+	display:flex;
 
 	audio {
 		z-index: 1;
