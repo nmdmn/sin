@@ -1,7 +1,8 @@
 varying vec2 vUv;
 varying float vNoise;
 varying vec3 vPos;
-varying float vSampledFrequency;
+varying float vNoiseSampledFrequency;
+varying float vUVSampledFrequency;
 
 uniform float time;
 uniform float scroll;
@@ -17,7 +18,7 @@ float map(float value, float min1, float max1, float min2, float max2) {
 
 void main() {
   float alpha = 1. - smoothstep(0., .5, length(gl_PointCoord - vec2(.5)));
-  float intensity = (vNoise + 1.) * .5 * vSampledFrequency;
+  float intensity = (vNoise + 1.) * .5 * vNoiseSampledFrequency;
 
   gl_FragColor = vec4(mix(coldColor, hotColor, vNoise),
                       alpha * smoothstep(-.2, 1., intensity * alpha));

@@ -5,7 +5,8 @@ attribute float noise;
 varying vec2 vUv;
 varying float vNoise;
 varying vec3 vPos;
-varying float vSampledFrequency;
+varying float vNoiseSampledFrequency;
+varying float vUVSampledFrequency;
 
 uniform float time;
 uniform float scroll;
@@ -24,11 +25,18 @@ void main() {
   vUv = uv;
   vNoise = noise;
   vPos = position;
-  vSampledFrequency = texture2D(audioData, vec2(noise * 0.2, 0.)).r;
+  vNoiseSampledFrequency = texture2D(audioData, vec2(noise * 0.2, 0.)).r;
 
-  float x = position.x;
-  float y = position.y;
-  float z = smoothstep(-.05, .5, noise / 16. * (vSampledFrequency + 1.));
+  const float animationSeconds = 180.;
+  const float animationSeconds2 = 30.;
+  const float mapSizeHalf = 2.5 * .5;
+  float offsetValue = sin(2. * PI * (time - .75) / animationSeconds);
+  float offsetValue2 =
+      sin(2. * PI * (1. - noise - .75) / animationSeconds2) / 2. + .5;
+  vUVSampledFrequency = texture2D(audioData, vec2(offsetValue2, .0)).r;
+  float x = position.x + offsetValue * mapSizeHalf;
+  float y = position.y + smoothstep(-1., .5, vUVSampledFrequency);
+  float z = smoothstep(-.05, .5, noise / 16. * (vNoiseSampledFrequency + 1.));
 
   vec3 distortedPosition = vec3(x, y, z);
   vec4 worldPosition = modelViewMatrix * vec4(distortedPosition, 1.);

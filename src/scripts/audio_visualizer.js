@@ -30,9 +30,9 @@ class Model {
     this.shader = new Three.ShaderMaterial({
       side : Three.DoubleSide,
       clipping : true,
-      fog : true,
+      fog : false,
       wireframe : true,
-      transparent : true,
+      transparent : false,
       depthTest : false,
       depthWrite : false,
       blending : Three.AdditiveBlending,
@@ -79,10 +79,12 @@ class Model {
 
 export default class AuidoVisualizer {
   constructor(args) {
-    args.clearColor = 0x111111;
+    args.clearColor = 0x000000;
     args.camera = new Three.PerspectiveCamera(
         63 / 2, window.innerWidth / window.innerHeight, .1, 1000.);
-    args.camera.position.copy(new Vector3(0., -1., 1));
+    args.camera.position.copy(new Vector3(0., -.5, .5));
+    args.camera.rotation.copy(new Euler(
+        1.0743653137563398, -0.07281009791107526, 0.1334985012224377));
 
     const app = new App(args);
 
