@@ -19,11 +19,15 @@ class MusicPlayer {
       this.sound.setVolume(1.);
     });
 
-    window.addEventListener('click', () => {
-      if (this.sound.isPlaying) {
-        this.sound.stop();
-      } else {
-        this.sound.play();
+    window.addEventListener('keydown', event => {
+      switch (event.code) {
+      case "Space":
+        if (this.sound.isPlaying) {
+          this.sound.pause();
+        } else {
+          this.sound.play();
+        }
+        break;
       }
     });
 

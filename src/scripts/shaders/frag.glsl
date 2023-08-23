@@ -16,5 +16,8 @@ float map(float value, float min1, float max1, float min2, float max2) {
 
 void main() {
   float alpha = 1. - smoothstep(0., .5, length(gl_PointCoord - vec2(.5)));
-  gl_FragColor = vec4(mix(coldColor, hotColor, vNoise), alpha);
+  float intensity = (vNoise + 1.) * .5 * vSampledFrequency;
+
+  gl_FragColor = vec4(mix(coldColor, hotColor, vNoise),
+                      alpha * smoothstep(-.2, 1., intensity * alpha));
 }
