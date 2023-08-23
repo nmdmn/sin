@@ -1,3 +1,5 @@
+#define PI 3.1415926535897932384626433832795
+
 attribute float noise;
 
 varying vec2 vUv;
@@ -21,9 +23,12 @@ void main() {
   float sampledFrequency =
       texture2D(audioData, uv * .8).r; // on 48kHz, 1/5 on top is useless?
 
-  float x = position.x;
-  float y = position.y * sampledFrequency;
-  float z = position.z;
+  float animOffset = time / 100. + 1. / noise;
+  float theta = uv.x * 2. * PI * animOffset;
+  float phi = uv.y * 2. * PI * animOffset;
+  float x = sin(theta) * cos(phi);
+  float y = sin(theta) * sin(phi);
+  float z = cos(theta);
 
   vec3 distortedPosition = vec3(x, y, z);
   vec4 worldPosition = modelViewMatrix * vec4(distortedPosition, 1.);
