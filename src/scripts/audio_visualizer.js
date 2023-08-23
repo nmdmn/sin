@@ -13,21 +13,21 @@ class MusicPlayer {
     app.camera.add(this.audioListener);
     this.sound = new Three.Audio(this.audioListener);
     const loader = new Three.AudioLoader();
+    loader.load(MusicUrl, buffer => {
+      this.sound.setBuffer(buffer);
+      this.sound.setLoop(true);
+      this.sound.setVolume(1.);
+    });
 
     window.addEventListener('click', () => {
       if (this.sound.isPlaying) {
         this.sound.stop();
       } else {
-        loader.load(MusicUrl, buffer => {
-          this.sound.setBuffer(buffer);
-          this.sound.setLoop(true);
-          this.sound.setVolume(1.);
-          this.sound.play();
-        });
+        this.sound.play();
       }
     });
 
-    this.fftSize = 2048;
+    this.fftSize = 8192;
     this.analyser = new Three.AudioAnalyser(this.sound, this.fftSize);
   }
 }
@@ -63,13 +63,13 @@ class Model {
       fragmentShader : FragmentShader,
     });
 
-    this.geometry = new Three.PlaneGeometry(1, 1, 100, 100);
+    this.geometry = new Three.PlaneGeometry(5, 5, 256, 256);
     const posArrayLen = this.geometry.attributes.position.array.length;
     const numVertices = posArrayLen / 3;
     const noisePerVertex = new Float32Array(numVertices);
     const noise = new createNoise3D();
     for (let i = 0; i < posArrayLen; i += 3) {
-      const offset = 1;
+      const offset = 2.;
       const noiseVal =
           noise(this.geometry.attributes.position.array[i] * offset,
                 this.geometry.attributes.position.array[i + 1] * offset,
@@ -89,7 +89,7 @@ export default class AuidoVisualizer {
     args.clearColor = 0x111111;
     args.camera = new Three.PerspectiveCamera(
         63 / 2, window.innerWidth / window.innerHeight, .1, 1000.);
-    args.camera.position.copy(new Vector3(0., 0., 2.));
+    args.camera.position.copy(new Vector3(0., -1., 1));
 
     const app = new App(args);
 

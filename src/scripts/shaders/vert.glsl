@@ -5,6 +5,7 @@ attribute float noise;
 varying vec2 vUv;
 varying float vNoise;
 varying vec3 vPos;
+varying float vSampledFrequency;
 
 uniform float time;
 uniform float scroll;
@@ -20,22 +21,17 @@ float toLog(float value, float min1, float max1) {
 }
 
 void main() {
-  float sampledFrequency =
-      texture2D(audioData, uv * .8).r; // on 48kHz, 1/5 on top is useless?
+  vUv = uv;
+  vNoise = noise;
+  vPos = position;
+  vSampledFrequency = texture2D(audioData, vec2(noise * 0.2, 0.)).r;
 
-  float animOffset = time / 100. + 1. / noise;
-  float theta = uv.x * 2. * PI * animOffset;
-  float phi = uv.y * 2. * PI * animOffset;
-  float x = sin(theta) * cos(phi);
-  float y = sin(theta) * sin(phi);
-  float z = cos(theta);
+  float x = position.x;
+  float y = position.y;
+  float z = smoothstep(-.05, .5, noise / 16. * (vSampledFrequency + 1.));
 
   vec3 distortedPosition = vec3(x, y, z);
   vec4 worldPosition = modelViewMatrix * vec4(distortedPosition, 1.);
-
-  vUv = uv;
-  vNoise = noise;
-  vPos = distortedPosition;
 
   gl_PointSize = 10. / -worldPosition.z;
   gl_Position = projectionMatrix * worldPosition;

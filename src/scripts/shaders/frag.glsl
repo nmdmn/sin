@@ -1,6 +1,7 @@
 varying vec2 vUv;
 varying float vNoise;
 varying vec3 vPos;
+varying float vSampledFrequency;
 
 uniform float time;
 uniform float scroll;
