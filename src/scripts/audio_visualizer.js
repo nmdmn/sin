@@ -20,19 +20,6 @@ class MusicPlayer {
     //   this.sound.setLoop(true);
     //   this.sound.setVolume(1.);
     // });
-
-    window.addEventListener('keydown', event => {
-      switch (event.code) {
-      case "Space":
-        if (this.sound.isPlaying) {
-          this.sound.pause();
-        } else {
-          this.sound.play();
-        }
-        break;
-      }
-    });
-
     this.fftSize = 8192;
     this.analyser = new Three.AudioAnalyser(this.sound, this.fftSize);
   }
