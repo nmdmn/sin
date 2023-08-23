@@ -5,6 +5,6 @@ varying vec3 vPos;
 varying float vNoise;
 
 void main() {
-	float filter = 1. - smoothstep(-.2, .5, length(gl_PointCoord - vec2(.5)));
-	gl_FragColor = vec4(1., 1., 1., filter);
+	float circAlpha = 1. - smoothstep(-.2, .5, length(gl_PointCoord - vec2(.5)));
+	gl_FragColor = vec4(1., 1., 1., circAlpha);
 }

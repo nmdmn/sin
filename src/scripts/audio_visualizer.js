@@ -1,14 +1,11 @@
+// import MusicUrl from "url:../audio/nmd-pulsar.mp3"
+import * as Tween from "@tweenjs/tween.js";
 import {createNoise3D} from "simplex-noise";
+
 import * as Three from "three";
 import {Euler, Vector3} from "three";
 
-// import MusicUrl from "url:../audio/nmd-pulsar.mp3"
-
 import {App, BufferObject} from "./app.js";
-import GridFragmentShader from "./shaders/grid_frag.glsl";
-import GridVertexShader from "./shaders/grid_vert.glsl";
-import BoxFragmentShader from "./shaders/box_frag.glsl";
-import BoxVertexShader from "./shaders/box_vert.glsl";
 
 class MusicPlayer {
 	constructor(app) {
@@ -27,8 +24,39 @@ class MusicPlayer {
 	}
 }
 
+import GridFragmentShader from "./shaders/grid_frag.glsl";
+import GridVertexShader from "./shaders/grid_vert.glsl";
 class GridModel {
 	constructor(app, music) {
+		this.initShader({
+			time : {type : "f", value : app.clock.getElapsedTime()},
+			scroll : {type : "f", value : window.scrollY},
+			audioData : {
+				value : new Three.DataTexture(music.analyser.data, music.fftSize / 2, 1,
+																			(app.renderer.capabilities.isWebGL2) ? Three.RedFormat : Three.LuminanceFormat)
+			}
+		});
+		this.initGeometry();
+		this.mesh = new Three.Points(this.geometry, this.shader);
+		app.scene.add(this.mesh);
+
+		const coords = {x : app.camera.position.x, y : app.camera.position.y, z : app.camera.position.z};
+		new Tween.Tween(coords)
+				.to({x : 10., y : 10., z : 10.}, 3000)
+				.easing(Tween.Easing.Back.In) // NOTE https://sole.github.io/tween.js/examples/03_graphs.html
+				.onUpdate(() => app.camera.position.set(coords.x, coords.y, coords.z))
+				.start();
+
+		app.callback = dT => {
+			this.shader.uniforms.time.value = app.clock.getElapsedTime();
+			this.shader.uniforms.scroll.value = window.scrollY;
+			music.analyser.getFrequencyData();
+			this.shader.uniforms.audioData.value.needsUpdate = true;
+			Tween.update();
+		};
+	}
+
+	initShader(uniforms) {
 		this.shader = new Three.ShaderMaterial({
 			side : Three.DoubleSide,
 			clipping : true,
@@ -44,18 +72,13 @@ class GridModel {
 				drawBuffers : true,
 				shaderTextureLOD : true,
 			},
-			uniforms : {
-				time : {type : "f", value : app.clock.getElapsedTime()},
-				scroll : {type : "f", value : window.scrollY},
-				audioData : {
-					value : new Three.DataTexture(music.analyser.data, music.fftSize / 2, 1,
-																				(app.renderer.capabilities.isWebGL2) ? Three.RedFormat : Three.LuminanceFormat)
-				}
-			},
+			uniforms : uniforms,
 			vertexShader : GridVertexShader,
 			fragmentShader : GridFragmentShader,
 		});
+	}
 
+	initGeometry() {
 		this.geometry = new Three.PlaneGeometry(5, 5, 128, 128);
 		const posArrayLen = this.geometry.attributes.position.array.length;
 		const numVertices = posArrayLen / 3;
@@ -69,12 +92,11 @@ class GridModel {
 			noisePerVertex.set([ noiseVal ], i / 3);
 		}
 		this.geometry.setAttribute("noise", new Three.BufferAttribute(noisePerVertex, 1));
-
-		this.mesh = new Three.Points(this.geometry, this.shader);
-		app.scene.add(this.mesh);
 	}
 }
 
+import BoxFragmentShader from "./shaders/box_frag.glsl";
+import BoxVertexShader from "./shaders/box_vert.glsl";
 class BoxModel {
 	constructor(app) {
 		this.initGeometry(10., 4.);
@@ -83,6 +105,7 @@ class BoxModel {
 		});
 		this.mesh = new Three.Points(this.geometry, this.shader);
 		app.scene.add(this.mesh);
+		app.callback = dT => { this.shader.uniforms.time.value = app.clock.getElapsedTime(); };
 	}
 
 	initShader(uniforms) {
@@ -139,11 +162,9 @@ export default class AuidoVisualizer {
 
 		const app = new App(args);
 
-		const music = new MusicPlayer(app);
+		// const music = new MusicPlayer(app);
 		// const model = new GridModel(app, music);
 		const model = new BoxModel(app);
-
-		app.setUpdateCallback(dT => { model.shader.uniforms.time.value = app.clock.getElapsedTime(); });
 
 		app.start();
 	}

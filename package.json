@@ -15,6 +15,7 @@
     "parcel": "^2.3.2"
   },
   "dependencies": {
+    "@tweenjs/tween.js": "^21.0.0",
     "dat.gui": "^0.7.9",
     "simplex-noise": "^4.0.1",
     "three": "^0.155.0"

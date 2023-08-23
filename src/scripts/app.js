@@ -1,11 +1,8 @@
 import * as Dat from "dat.gui";
+
 import * as Three from "three";
-import {
-	MapControls,
-} from "three/examples/jsm/controls/MapControls";
-import {
-	OrbitControls,
-} from "three/examples/jsm/controls/OrbitControls";
+import {MapControls} from "three/examples/jsm/controls/MapControls";
+import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import {EffectComposer} from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import {OutputPass} from 'three/examples/jsm/postprocessing/OutputPass.js';
 import {RenderPass} from 'three/examples/jsm/postprocessing/RenderPass.js';
@@ -38,6 +35,7 @@ export class App {
 		this.scene = new Three.Scene();
 		this.camera = args.camera;
 		// this.cameraControl = new MapControls(this.camera, this.canvas);
+		this.cameraControl = new OrbitControls(this.camera, this.canvas);
 		// this.cameraControl.rollSpeed = .25;
 		this.scenePass = new RenderPass(this.scene, this.camera);
 		this.bloomPass = new UnrealBloomPass(new Three.Vector2(window.innerWidth, window.innerHeight), .1, 3., .8);
@@ -51,21 +49,21 @@ export class App {
 		this.clock = new Three.Clock();
 
 		window.addEventListener('resize', () => { this.onResize(); }, false);
-	}
 
-	setUpdateCallback(updateCallback) { this.updateCallback = updateCallback; }
+		this.callback = () => {};
+	}
 
 	onResize() {
 		this.camera.aspect = window.innerWidth / window.innerHeight;
 		this.camera.updateProjectionMatrix();
-		// this.cameraControl.update();
+		this.cameraControl.update();
 		this.composer.setSize(window.innerWidth, window.innerHeight);
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 		this.renderer.setPixelRatio(window.devicePixelRatio);
 	}
 
 	tick() {
-		this.updateCallback(this.clock.getDelta());
+		this.callback(this.clock.getDelta());
 		this.composer.render();
 
 		window.requestAnimationFrame(this.tick.bind(this));
