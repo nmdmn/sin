@@ -8,7 +8,36 @@ import {Euler, Vector3} from "three";
 import {App, BufferObject} from "./app.js";
 
 class MusicPlayer {
-	constructor(app) {
+	constructor(args, app) {
+		this.initSound(app);
+
+		const playButton = document.querySelector("." + args.playButton);
+		"transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd".split(" ").forEach((eventType) => {
+			document.addEventListener(eventType, function(event) {
+				console.log(event.target);
+				if (event.target.matches("." + args.playerStart)) {
+					playButton.classList.remove(args.playerStart);
+				}
+			});
+		});
+		playButton.addEventListener("click", (event) => {
+			event.preventDefault();
+			if (playButton.classList.contains(args.playerStop)) {
+				playButton.classList.remove(args.playerStop);
+				playButton.classList.add(args.playerStart);
+			} else if (!playButton.classList.contains(args.playerStart)) {
+				playButton.classList.add(args.playerStop);
+			}
+
+			if (this.sound.isPlaying) {
+				this.sound.pause();
+			} else {
+				this.sound.play();
+			}
+		});
+	}
+
+	initSound(app) {
 		this.audioListener = new Three.AudioListener();
 		app.camera.add(this.audioListener);
 		this.sound = new Three.Audio(this.audioListener);
@@ -19,15 +48,6 @@ class MusicPlayer {
 			this.sound.setLoop(true);
 			this.sound.setVolume(1.);
 		});
-
-		document.addEventListener('click', () => {
-			if (this.sound.isPlaying) {
-				this.sound.pause();
-			} else {
-				this.sound.play();
-			}
-		});
-
 		this.fftSize = 4096;
 		this.analyser = new Three.AudioAnalyser(this.sound, this.fftSize);
 	}
@@ -37,6 +57,7 @@ import GridFragmentShader from "./shaders/grid_frag.glsl";
 import GridVertexShader from "./shaders/grid_vert.glsl";
 class GridModel {
 	constructor(app, music) {
+		this.initGeometry();
 		this.initShader({
 			time : {type : "f", value : app.clock.getElapsedTime()},
 			scroll : {type : "f", value : window.scrollY},
@@ -45,7 +66,6 @@ class GridModel {
 																			(app.renderer.capabilities.isWebGL2) ? Three.RedFormat : Three.LuminanceFormat)
 			}
 		});
-		this.initGeometry();
 		this.mesh = new Three.Points(this.geometry, this.shader);
 		app.scene.add(this.mesh);
 
@@ -177,7 +197,7 @@ export default class AuidoVisualizer {
 
 		const app = new App(args);
 
-		const music = new MusicPlayer(app);
+		const music = new MusicPlayer(args, app);
 		const model = new GridModel(app, music);
 		// const model = new BoxModel(app);
 

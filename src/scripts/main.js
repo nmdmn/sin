@@ -5,6 +5,9 @@ function main() {
 		queryCanvas : "canvas",
 		queryLoadingSreen : "#loading-screen",
 		loadedClass : "loaded",
+		playButton : "play-button",
+		playerStart : "to-play",
+		playerStop : "stop",
 	});
 }
 

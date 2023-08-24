@@ -1,0 +1,58 @@
+$btn-color: #eceff1; 
+$btn-size : 100px;
+$duration : 300ms;
+$easing   : cubic-bezier(0, 0, .2, 1);
+$half-size: ($btn-size / 2);
+
+/**
+ * The actual play button
+ */
+.play-button {
+  z-index     : 2;
+	
+  /** Positioning */
+  position    : absolute;
+  left        : 50%;
+  top         : 50%;
+  margin-left : -$half-size;
+  margin-top  : -$half-size;
+  
+  /** Sizing */
+  width       : $btn-size;
+  height      : $btn-size;
+  
+  /** Border styling */
+  border-style: solid;
+  border-color: transparent $btn-color transparent $btn-color;
+  border-width: $half-size 0 $half-size $btn-size;
+
+  background-color: rgba(0,0,0,0);
+
+  
+  &.stop,
+  &.to-play {
+  	
+    /** Animate morphing */
+    transition  : transform           $duration $easing,
+                  border-top-width    $duration $easing,
+                  border-bottom-width $duration $easing;
+  
+  }
+  
+  &.stop {
+  	
+    /** Morph to a stop button */
+    transform   : rotate(90deg);
+    border-width: 0 0 0 $btn-size;
+    
+  }
+  
+  &.to-play {
+    
+    /** Morph back from a stop button to a play button */
+    transform   : rotate(180deg);
+    border-width: $half-size $btn-size $half-size 0;
+    
+  }
+  
+}
