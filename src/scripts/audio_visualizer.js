@@ -1,4 +1,4 @@
-// import MusicUrl from "url:../audio/nmd-pulsar.mp3"
+import MusicUrl from "url:../audio/nmd-pulsar.mp3"
 import * as Tween from "@tweenjs/tween.js";
 import {createNoise3D} from "simplex-noise";
 
@@ -12,13 +12,22 @@ class MusicPlayer {
 		this.audioListener = new Three.AudioListener();
 		app.camera.add(this.audioListener);
 		this.sound = new Three.Audio(this.audioListener);
-		this.sound.setMediaElementSource(document.querySelector("audio"));
-		// const loader = new Three.AudioLoader();
-		// loader.load(MusicUrl, buffer => {
-		//   this.sound.setBuffer(buffer);
-		//   this.sound.setLoop(true);
-		//   this.sound.setVolume(1.);
-		// });
+		// this.sound.setMediaElementSource(document.querySelector("audio"));
+		const loader = new Three.AudioLoader(app.loadingManager);
+		loader.load(MusicUrl, buffer => {
+			this.sound.setBuffer(buffer);
+			this.sound.setLoop(true);
+			this.sound.setVolume(1.);
+		});
+
+		document.addEventListener('click', () => {
+			if (this.sound.isPlaying) {
+				this.sound.pause();
+			} else {
+				this.sound.play();
+			}
+		});
+
 		this.fftSize = 4096;
 		this.analyser = new Three.AudioAnalyser(this.sound, this.fftSize);
 	}
@@ -40,19 +49,11 @@ class GridModel {
 		this.mesh = new Three.Points(this.geometry, this.shader);
 		app.scene.add(this.mesh);
 
-		const coords = {x : app.camera.position.x, y : app.camera.position.y, z : app.camera.position.z};
-		new Tween.Tween(coords)
-				.to({x : 10., y : 10., z : 10.}, 3000)
-				.easing(Tween.Easing.Back.In) // NOTE https://sole.github.io/tween.js/examples/03_graphs.html
-				.onUpdate(() => app.camera.position.set(coords.x, coords.y, coords.z))
-				.start();
-
 		app.callback = dT => {
 			this.shader.uniforms.time.value = app.clock.getElapsedTime();
 			this.shader.uniforms.scroll.value = window.scrollY;
 			music.analyser.getFrequencyData();
 			this.shader.uniforms.audioData.value.needsUpdate = true;
-			Tween.update();
 		};
 	}
 
@@ -79,7 +80,7 @@ class GridModel {
 	}
 
 	initGeometry() {
-		this.geometry = new Three.PlaneGeometry(5, 5, 128, 128);
+		this.geometry = new Three.PlaneGeometry(5, 5, 256, 256);
 		const posArrayLen = this.geometry.attributes.position.array.length;
 		const numVertices = posArrayLen / 3;
 		const noisePerVertex = new Float32Array(numVertices);
@@ -105,7 +106,18 @@ class BoxModel {
 		});
 		this.mesh = new Three.Points(this.geometry, this.shader);
 		app.scene.add(this.mesh);
-		app.callback = dT => { this.shader.uniforms.time.value = app.clock.getElapsedTime(); };
+
+		const coords = {x : app.camera.position.x, y : app.camera.position.y, z : app.camera.position.z};
+		new Tween.Tween(coords)
+				.to({x : 15., y : 15., z : 15.}, 5000.)
+				.easing(Tween.Easing.Back.InOut) // NOTE https://sole.github.io/tween.js/examples/03_graphs.html
+				.onUpdate(() => app.camera.position.set(coords.x, coords.y, coords.z))
+				.start();
+
+		app.callback = dT => {
+			this.shader.uniforms.time.value = app.clock.getElapsedTime();
+			Tween.update();
+		};
 	}
 
 	initShader(uniforms) {
@@ -158,13 +170,16 @@ export default class AuidoVisualizer {
 	constructor(args) {
 		args.clearColor = 0x000000;
 		args.camera = new Three.PerspectiveCamera(63 / 2, window.innerWidth / window.innerHeight, .1, 1000.);
-		args.camera.position.copy(new Vector3(100., 100., 100.));
+		args.camera.position.copy(new Vector3(0., -.5, .5));
+		args.camera.rotation.copy(new Euler(1.0743653137563398, -0.07281009791107526, 0.1334985012224377));
+		// args.camera.position.copy(new Vector3(150., 150., 150.));
+		// args.camera.lookAt(new Vector3(0., 0., 0.));
 
 		const app = new App(args);
 
-		// const music = new MusicPlayer(app);
-		// const model = new GridModel(app, music);
-		const model = new BoxModel(app);
+		const music = new MusicPlayer(app);
+		const model = new GridModel(app, music);
+		// const model = new BoxModel(app);
 
 		app.start();
 	}

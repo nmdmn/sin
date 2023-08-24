@@ -1,9 +1,11 @@
 import AuidoVisualizer from "./audio_visualizer";
 
 function main() {
-  new AuidoVisualizer({
-    querySelect : "canvas",
-  });
+	new AuidoVisualizer({
+		queryCanvas : "canvas",
+		queryLoadingSreen : "#loading-screen",
+		loadedClass : "loaded",
+	});
 }
 
 document.addEventListener("DOMContentLoaded", main);

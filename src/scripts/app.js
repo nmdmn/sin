@@ -23,7 +23,12 @@ export class BufferObject {
 
 export class App {
 	constructor(args) {
-		this.canvas = document.querySelector(args.querySelect);
+		this.loadingManager = new Three.LoadingManager(() => {
+			const loadingScreen = document.querySelector(args.queryLoadingSreen);
+			loadingScreen.classList.add(args.loadedClass);
+		});
+
+		this.canvas = document.querySelector(args.queryCanvas);
 		this.renderer = new Three.WebGLRenderer({
 			canvas : this.canvas,
 			antialias : true,
@@ -35,7 +40,7 @@ export class App {
 		this.scene = new Three.Scene();
 		this.camera = args.camera;
 		// this.cameraControl = new MapControls(this.camera, this.canvas);
-		this.cameraControl = new OrbitControls(this.camera, this.canvas);
+		// this.cameraControl = new OrbitControls(this.camera, this.canvas);
 		// this.cameraControl.rollSpeed = .25;
 		this.scenePass = new RenderPass(this.scene, this.camera);
 		this.bloomPass = new UnrealBloomPass(new Three.Vector2(window.innerWidth, window.innerHeight), .1, 3., .8);
@@ -56,7 +61,7 @@ export class App {
 	onResize() {
 		this.camera.aspect = window.innerWidth / window.innerHeight;
 		this.camera.updateProjectionMatrix();
-		this.cameraControl.update();
+		// this.cameraControl.update();
 		this.composer.setSize(window.innerWidth, window.innerHeight);
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 		this.renderer.setPixelRatio(window.devicePixelRatio);
