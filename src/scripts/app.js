@@ -24,14 +24,7 @@ export class BufferObject {
 export class App {
 	constructor(args) {
 		this.loaded = () => {};
-		this.loadingManager = new Three.LoadingManager(() => {
-			this.loaded();
-			const loadingScreen = document.querySelector("." + args.queryLoadingSreen);
-			loadingScreen.classList.add(args.loadedClass);
-			const playButton = document.querySelector("." + args.playButton);
-			playButton.classList.remove(args.loadingClass);
-		});
-
+		this.loadingManager = new Three.LoadingManager(() => { this.loaded(); });
 		this.canvas = document.querySelector(args.queryCanvas);
 		this.renderer = new Three.WebGLRenderer({
 			canvas : this.canvas,

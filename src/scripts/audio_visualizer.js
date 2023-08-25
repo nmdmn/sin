@@ -11,17 +11,18 @@ class MusicPlayer {
 	constructor(args, app) {
 		this.isInit = true;
 
-		const playButton = document.querySelector("." + args.playButton);
+		this.loadingScreen = document.querySelector("." + args.queryLoadingSreen);
+		this.playButton = document.querySelector("." + args.playButton);
 		document.addEventListener("transitionend", function(event) {
 			if (event.target.matches("." + args.playerStart)) {
-				playButton.classList.remove(args.playerStart);
+				this.playButton.classList.remove(args.playerStart);
 			}
 		});
-		playButton.addEventListener("click", (event) => {
+		this.playButton.addEventListener("click", (event) => {
 			event.preventDefault();
 
 			if (this.isInit) {
-				playButton.classList.add(args.loadingClass);
+				this.playButton.classList.add(args.loadingClass);
 				this.initSound(app);
 
 				this.isInit = false;
@@ -31,11 +32,11 @@ class MusicPlayer {
 				this.sound.play();
 			}
 
-			if (playButton.classList.contains(args.playerStop)) {
-				playButton.classList.remove(args.playerStop);
-				playButton.classList.add(args.playerStart);
-			} else if (!playButton.classList.contains(args.playerStart)) {
-				playButton.classList.add(args.playerStop);
+			if (this.playButton.classList.contains(args.playerStop)) {
+				this.playButton.classList.remove(args.playerStop);
+				this.playButton.classList.add(args.playerStart);
+			} else if (!this.playButton.classList.contains(args.playerStart)) {
+				this.playButton.classList.add(args.playerStop);
 			}
 		});
 	}
@@ -202,7 +203,12 @@ export default class AuidoVisualizer {
 		const app = new App(args);
 
 		const music = new MusicPlayer(args, app);
-		app.loaded = () => { const model = new GridModel(app, music); };
+		app.loaded = () => {
+			const model = new GridModel(app, music);
+
+			music.loadingScreen.classList.add(args.loadedClass);
+			music.playButton.classList.remove(args.loadingClass);
+		};
 		//  const model = new BoxModel(app);
 
 		app.start();
