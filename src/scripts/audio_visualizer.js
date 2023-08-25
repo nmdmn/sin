@@ -23,6 +23,8 @@ class MusicPlayer {
 			if (this.isInit) {
 				playButton.classList.add(args.loadingClass);
 				this.initSound(app);
+
+				this.isInit = false;
 			} else if (this.sound.isPlaying) {
 				this.sound.pause();
 			} else {
@@ -52,8 +54,6 @@ class MusicPlayer {
 		});
 		this.fftSize = 4096;
 		this.analyser = new Three.AudioAnalyser(this.sound, this.fftSize);
-
-		this.isInit = false;
 	}
 }
 
