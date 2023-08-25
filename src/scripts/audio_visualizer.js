@@ -9,7 +9,7 @@ import {App, BufferObject} from "./app.js";
 
 class MusicPlayer {
 	constructor(args, app) {
-		this.initSound(app);
+		this.isInit = true;
 
 		const playButton = document.querySelector("." + args.playButton);
 		document.addEventListener("transitionend", function(event) {
@@ -20,7 +20,10 @@ class MusicPlayer {
 		playButton.addEventListener("click", (event) => {
 			event.preventDefault();
 
-			if (this.sound.isPlaying) {
+			if (this.isInit) {
+				playButton.classList.add(args.loadingClass);
+				this.initSound(app);
+			} else if (this.sound.isPlaying) {
 				this.sound.pause();
 			} else {
 				this.sound.play();
@@ -45,9 +48,12 @@ class MusicPlayer {
 			this.sound.setBuffer(buffer);
 			this.sound.setLoop(true);
 			this.sound.setVolume(1.);
+			this.sound.play();
 		});
 		this.fftSize = 4096;
 		this.analyser = new Three.AudioAnalyser(this.sound, this.fftSize);
+
+		this.isInit = false;
 	}
 }
 
@@ -196,8 +202,8 @@ export default class AuidoVisualizer {
 		const app = new App(args);
 
 		const music = new MusicPlayer(args, app);
-		const model = new GridModel(app, music);
-		// const model = new BoxModel(app);
+		app.loaded = () => { const model = new GridModel(app, music); };
+		//  const model = new BoxModel(app);
 
 		app.start();
 	}

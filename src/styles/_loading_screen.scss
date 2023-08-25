@@ -2,7 +2,7 @@ $btn-color: #eceff1;
 $btn-size : 100px;
 $duration : 300ms;
 $easing   : cubic-bezier(0, 0, .2, 1);
-$half-size: ($btn-size / 2);
+$half-size: calc($btn-size / 2);
 
 .loading-screen {
 	z-index: 1;
@@ -15,7 +15,7 @@ $half-size: ($btn-size / 2);
 	
   background-color: #000000;
 	opacity: 1;
- 	transition: 1s opacity;
+ 	transition: 3s opacity;
 
   &.loaded {
     opacity: 0;
@@ -71,7 +71,7 @@ $half-size: ($btn-size / 2);
   }
 
   &.loading {
-    animation: spin 2s linear infinite;
+    animation: spin .5s linear infinite;
     border-width: 0 0 0 $btn-size;
   }
 }
