@@ -4,6 +4,24 @@ $duration : 300ms;
 $easing   : cubic-bezier(0, 0, .2, 1);
 $half-size: ($btn-size / 2);
 
+.loading-screen {
+	z-index: 1;
+	
+  position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	
+  background-color: #000000;
+	opacity: 1;
+ 	transition: 1s opacity;
+
+  &.loaded {
+    opacity: 0;
+  }
+}
+
 /**
  * The actual play button
  */
@@ -36,7 +54,6 @@ $half-size: ($btn-size / 2);
     transition  : transform           $duration $easing,
                   border-top-width    $duration $easing,
                   border-bottom-width $duration $easing;
-  
   }
   
   &.stop {
@@ -44,7 +61,6 @@ $half-size: ($btn-size / 2);
     /** Morph to a stop button */
     transform   : rotate(90deg);
     border-width: 0 0 0 $btn-size;
-    
   }
   
   &.to-play {
@@ -52,7 +68,23 @@ $half-size: ($btn-size / 2);
     /** Morph back from a stop button to a play button */
     transform   : rotate(180deg);
     border-width: $half-size $btn-size $half-size 0;
-    
   }
-  
+
+  &.loading {
+    animation: spin 2s linear infinite;
+    border-width: 0 0 0 $btn-size;
+  }
+}
+
+@keyframes spin {
+    0%   {
+        -webkit-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
 }

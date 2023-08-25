@@ -24,7 +24,7 @@ export class BufferObject {
 export class App {
 	constructor(args) {
 		this.loadingManager = new Three.LoadingManager(() => {
-			const loadingScreen = document.querySelector(args.queryLoadingSreen);
+			const loadingScreen = document.querySelector("." + args.queryLoadingSreen);
 			loadingScreen.classList.add(args.loadedClass);
 		});
 

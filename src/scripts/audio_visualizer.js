@@ -12,27 +12,25 @@ class MusicPlayer {
 		this.initSound(app);
 
 		const playButton = document.querySelector("." + args.playButton);
-		"transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd".split(" ").forEach((eventType) => {
-			document.addEventListener(eventType, function(event) {
-				console.log(event.target);
-				if (event.target.matches("." + args.playerStart)) {
-					playButton.classList.remove(args.playerStart);
-				}
-			});
+		document.addEventListener("transitionend", function(event) {
+			if (event.target.matches("." + args.playerStart)) {
+				playButton.classList.remove(args.playerStart);
+			}
 		});
 		playButton.addEventListener("click", (event) => {
 			event.preventDefault();
-			if (playButton.classList.contains(args.playerStop)) {
-				playButton.classList.remove(args.playerStop);
-				playButton.classList.add(args.playerStart);
-			} else if (!playButton.classList.contains(args.playerStart)) {
-				playButton.classList.add(args.playerStop);
-			}
 
 			if (this.sound.isPlaying) {
 				this.sound.pause();
 			} else {
 				this.sound.play();
+			}
+
+			if (playButton.classList.contains(args.playerStop)) {
+				playButton.classList.remove(args.playerStop);
+				playButton.classList.add(args.playerStart);
+			} else if (!playButton.classList.contains(args.playerStart)) {
+				playButton.classList.add(args.playerStop);
 			}
 		});
 	}
